@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
+<html lang="ru"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>IRONMIND | Фитнес нового поколения</title>
   <!-- Шрифты: Anton для заголовков, Inter для читаемости основного текста -->
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="4_files/css2.css" rel="stylesheet">
   <style>
     /* Сброс и переменные */
     :root {
@@ -537,19 +537,19 @@
   <section class="section-dark diagonal-box">
     <div class="container">
       <h2 class="compare-title">ТРАНСФОРМАЦИЯ</h2>
-      <div class="compare-wrapper" id="compareContainer">
+      <div class="compare-wrapper" id="compareContainer" style="cursor: ew-resize;">
         <!-- Исходное фото (До) -->
-        <div class="compare-img before" style="background-image: url('https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=2070&auto=format&fit=crop');"></div>
+        <div class="compare-img before" style="background-image: url('https://avatars.mds.yandex.net/i?id=cfd2e38d21d16050aee06cb94a4a6c1a_l-6484760-images-thumbs&amp;n=13');"></div>
         
         <!-- Фото После с красным градиентом через ::before -->
-        <div class="compare-img after" id="afterImg" style="background-image: url('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=2070&auto=format&fit=crop');"></div>
+        <div class="compare-img after" id="afterImg" style="background-image: url(&quot;https://avatars.mds.yandex.net/i?id=11891410119e1581de52ea4ab3456e39_l-4446390-images-thumbs&amp;n=13&quot;); clip-path: inset(0px 0px 0px 37.5556%);"></div>
         
         <!-- Линия разделителя -->
-        <div class="compare-divider" id="divider"></div>
-        <div class="compare-handle" id="handle">⟷</div>
+        <div class="compare-divider" id="divider" style="left: 37.5556%;"></div>
+        <div class="compare-handle" id="handle" style="left: 37.5556%;">⟷</div>
         
         <!-- Бегунок управления (невидимый) -->
-        <input type="range" min="0" max="100" value="50" class="compare-slider" id="compareSlider">
+        <input type="range" min="0" max="100" value="38" class="compare-slider" id="compareSlider">
         
         <!-- Лейблы на фото -->
         <div class="compare-labels">
@@ -581,7 +581,7 @@
       
       <form id="leadForm" class="footer-form">
         <div class="input-group">
-          <input type="email" id="emailInput" placeholder="Введи свой e-mail" required>
+          <input type="email" id="emailInput" placeholder="Введи свой e-mail" required="">
           <div class="error-message" id="errorMsg">Введи корректный адрес, воин!</div>
           <div class="success-message" id="successMsg">Ты в команде! Проверь почту.</div>
         </div>
@@ -714,5 +714,5 @@
 
     })();
   </script>
-</body>
-</html>
+
+</body></html>
