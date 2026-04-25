@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
+<html lang="ru"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vinyl Vault — Мини-маркет виниловых пластинок</title>
-    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Roboto+Slab:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="12_files/css2.css" rel="stylesheet">
     <style>
         :root {
             --orange: #e07a32;
@@ -922,9 +922,103 @@
             </nav>
 
             <!-- Сетка пластинок -->
-            <div class="vinyl-grid" id="vinylGrid">
-                <!-- Карточки генерируются JS -->
-            </div>
+            <div class="vinyl-grid" id="vinylGrid"><article class="vinyl-card" data-genre="jazz" data-id="v1">
+                        <div class="card-media">
+                            <!-- Виниловый диск (позади обложки) -->
+                            <div class="vinyl-disc" aria-hidden="true"></div>
+                            <!-- Обложка -->
+                            <div class="cover-wrapper">
+                                <img src="12_files/1045-300x300.jpg" alt="Обложка альбома Kind of Blue — Miles Davis" loading="lazy" width="300" height="300">
+                            </div>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-genre-badge">jazz</span>
+                            <h3 class="card-artist">Miles Davis</h3>
+                            <p class="card-album">Kind of Blue</p>
+                            <span class="card-price">$25</span>
+                            <button class="btn-add" data-id="v1">Добавить в коллекцию</button>
+                        </div>
+                    </article><article class="vinyl-card" data-genre="jazz" data-id="v2">
+                        <div class="card-media">
+                            <!-- Виниловый диск (позади обложки) -->
+                            <div class="vinyl-disc" aria-hidden="true"></div>
+                            <!-- Обложка -->
+                            <div class="cover-wrapper">
+                                <img src="12_files/817-300x300.jpg" alt="Обложка альбома A Love Supreme — John Coltrane" loading="lazy" width="300" height="300">
+                            </div>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-genre-badge">jazz</span>
+                            <h3 class="card-artist">John Coltrane</h3>
+                            <p class="card-album">A Love Supreme</p>
+                            <span class="card-price">$28</span>
+                            <button class="btn-add" data-id="v2">Добавить в коллекцию</button>
+                        </div>
+                    </article><article class="vinyl-card" data-genre="funk" data-id="v3">
+                        <div class="card-media">
+                            <!-- Виниловый диск (позади обложки) -->
+                            <div class="vinyl-disc" aria-hidden="true"></div>
+                            <!-- Обложка -->
+                            <div class="cover-wrapper">
+                                <img src="12_files/612-300x300.jpg" alt="Обложка альбома The Payback — James Brown" loading="lazy" width="300" height="300">
+                            </div>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-genre-badge">funk</span>
+                            <h3 class="card-artist">James Brown</h3>
+                            <p class="card-album">The Payback</p>
+                            <span class="card-price">$22</span>
+                            <button class="btn-add in-cart" data-id="v3" disabled="disabled">В коллекции</button>
+                        </div>
+                    </article><article class="vinyl-card" data-genre="funk" data-id="v4">
+                        <div class="card-media">
+                            <!-- Виниловый диск (позади обложки) -->
+                            <div class="vinyl-disc" aria-hidden="true"></div>
+                            <!-- Обложка -->
+                            <div class="cover-wrapper">
+                                <img src="12_files/822-300x300.jpg" alt="Обложка альбома Mothership Connection — Parliament" loading="lazy" width="300" height="300">
+                            </div>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-genre-badge">funk</span>
+                            <h3 class="card-artist">Parliament</h3>
+                            <p class="card-album">Mothership Connection</p>
+                            <span class="card-price">$24</span>
+                            <button class="btn-add" data-id="v4">Добавить в коллекцию</button>
+                        </div>
+                    </article><article class="vinyl-card" data-genre="soul" data-id="v5">
+                        <div class="card-media">
+                            <!-- Виниловый диск (позади обложки) -->
+                            <div class="vinyl-disc" aria-hidden="true"></div>
+                            <!-- Обложка -->
+                            <div class="cover-wrapper">
+                                <img src="12_files/864-300x300.jpg" alt="Обложка альбома What's Going On — Marvin Gaye" loading="lazy" width="300" height="300">
+                            </div>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-genre-badge">soul</span>
+                            <h3 class="card-artist">Marvin Gaye</h3>
+                            <p class="card-album">What's Going On</p>
+                            <span class="card-price">$26</span>
+                            <button class="btn-add" data-id="v5">Добавить в коллекцию</button>
+                        </div>
+                    </article><article class="vinyl-card" data-genre="soul" data-id="v6">
+                        <div class="card-media">
+                            <!-- Виниловый диск (позади обложки) -->
+                            <div class="vinyl-disc" aria-hidden="true"></div>
+                            <!-- Обложка -->
+                            <div class="cover-wrapper">
+                                <img src="12_files/216-300x300.jpg" alt="Обложка альбома Lady Soul — Aretha Franklin" loading="lazy" width="300" height="300">
+                            </div>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-genre-badge">soul</span>
+                            <h3 class="card-artist">Aretha Franklin</h3>
+                            <p class="card-album">Lady Soul</p>
+                            <span class="card-price">$23</span>
+                            <button class="btn-add" data-id="v6">Добавить в коллекцию</button>
+                        </div>
+                    </article></div>
         </main>
 
         <!-- Корзина (десктоп) -->
@@ -932,14 +1026,19 @@
             <h2 class="cart-header">
                 <span class="cart-icon" aria-hidden="true">🛒</span>Коллекция
             </h2>
-            <ul class="cart-items-list" id="cartItemsList">
-                <li class="cart-empty">Ваша коллекция пуста<br>Добавьте винил!</li>
-            </ul>
+            <ul class="cart-items-list" id="cartItemsList"><li class="cart-item">
+                            <div class="cart-item-info">
+                                <div class="cart-item-name">The Payback</div>
+                                <div class="cart-item-artist">James Brown</div>
+                            </div>
+                            <span class="cart-item-price">$22</span>
+                            <button class="btn-remove" data-id="v3" title="Удалить" aria-label="Удалить The Payback">✕</button>
+                        </li></ul>
             <div class="cart-summary">
                 <span class="cart-total-label">Итого:</span>
-                <span class="cart-total-amount" id="cartTotal">$0</span>
+                <span class="cart-total-amount" id="cartTotal">$22</span>
             </div>
-            <button class="btn-clear-cart" id="btnClearCart" title="Очистить корзину">Очистить</button>
+            <button class="btn-clear-cart" id="btnClearCart" title="Очистить корзину" style="display: block;">Очистить</button>
         </aside>
     </div>
 
@@ -947,9 +1046,9 @@
     <div class="cart-overlay" id="cartOverlay"></div>
 
     <!-- Кнопка открытия корзины на мобильных -->
-    <button class="mobile-cart-toggle" id="mobileCartToggle" aria-label="Открыть корзину">
+    <button class="mobile-cart-toggle" id="mobileCartToggle" aria-label="Открыть корзину" style="display: none;">
         🛒
-        <span class="badge" id="cartBadge" style="display:none;">0</span>
+        <span class="badge" id="cartBadge" style="display: flex;">1</span>
     </button>
 
     <!-- ═══════════ ФУТЕР ═══════════ -->
@@ -1325,5 +1424,6 @@
             }
         })();
     </script>
-</body>
-</html>
+
+
+</body></html>
