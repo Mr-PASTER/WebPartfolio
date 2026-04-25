@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Deadline Destroyer | Курс по тайм-менеджменту</title>
+  <!-- Подключаем шрифты: Montserrat + Gilroy через CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/gilroy-bold" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #ffffff;
+      color: #1e1e1e;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .gilroy {
+      font-family: 'Gilroy-Bold', 'Gilroy', 'Montserrat', sans-serif;
+      font-weight: 800;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Геометрические формы и общий тон */
+    :root {
+      --violet: #6c3cf0;
+      --yellow: #ffd500;
+      --black: #121212;
+      --white: #ffffff;
+      --gradient-cta: linear-gradient(135deg, #6c3cf0 0%, #9b5cf6 100%);
+      --shadow-card: 0 20px 40px rgba(108, 60, 240, 0.12);
+    }
+
+    /* ХЕДЕР С ТАЙМЕРОМ */
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #f0edff;
+      flex-wrap: wrap;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--violet);
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Gilroy-Bold', sans-serif;
+    }
+
+    .logo span {
+      background: var(--violet);
+      color: white;
+      border-radius: 10px;
+      padding: 4px 10px;
+      font-size: 1rem;
+    }
+
+    .discount-timer {
+      background: #fff5cc;
+      padding: 10px 20px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #3a2e00;
+      border: 2px dashed var(--yellow);
+      background-color: #fffef0;
+    }
+
+    #timer {
+      background: var(--black);
+      color: var(--yellow);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-family: monospace;
+      font-size: 1.3rem;
+      letter-spacing: 1px;
+    }
+
+    /* HERO */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding: 60px 0 50px;
+      gap: 30px;
+    }
+
+    .hero-content {
+      flex: 1 1 500px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.2rem);
+      line-height: 1.1;
+      color: var(--black);
+      margin-bottom: 1.2rem;
+    }
+
+    .hero h1 .highlight {
+      background: var(--yellow);
+      padding: 0 12px;
+      display: inline-block;
+      transform: rotate(-1deg);
+      border-radius: 8px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: #3a3a3a;
+      max-width: 550px;
+    }
+
+    .cta-button {
+      background: var(--gradient-cta);
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 1.2rem;
+      padding: 18px 42px;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 15px 30px rgba(108, 60, 240, 0.4);
+      transition: all 0.25s ease;
+      display: inline-block;
+      text-decoration: none;
+      letter-spacing: 0.3px;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 22px 38px rgba(108, 60, 240, 0.5);
+      background: linear-gradient(135deg, #5a2bd0, #8a4de6);
+    }
+
+    .hero-visual {
+      flex: 1 1 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .geometric-badge {
+      background: #f3efff;
+      border-radius: 60px;
+      padding: 35px 45px;
+      font-size: 3.5rem;
+      box-shadow: 0 30px 50px rgba(108, 60, 240, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 4px solid white;
+      outline: 3px solid var(--violet);
+    }
+
+    .big-number {
+      font-size: 5rem;
+      font-weight: 800;
+      color: var(--violet);
+      line-height: 1;
+    }
+
+    /* СЕКЦИЯ "ЧТО ВНУТРИ" - ГОРИЗОНТАЛЬНЫЙ СКРОЛЛ */
+    .section-title {
+      font-size: 2.5rem;
+      margin: 50px 0 25px;
+      color: var(--black);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .scroll-wrapper {
+      position: relative;
+    }
+
+    .steps-scroll-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .steps-scroll {
+      display: flex;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      gap: 28px;
+      padding: 20px 5px 30px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      flex: 1;
+      scrollbar-width: thin;
+      scrollbar-color: var(--violet) #e9e3fc;
+    }
+
+    .steps-scroll::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .steps-scroll::-webkit-scrollbar-thumb {
+      background: var(--violet);
+      border-radius: 10px;
+    }
+
+    .step-card {
+      flex: 0 0 300px;
+      background: white;
+      border-radius: 28px;
+      padding: 30px 22px;
+      box-shadow: var(--shadow-card);
+      scroll-snap-align: start;
+      border: 2px solid #f0edff;
+      transition: transform 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .step-icon {
+      font-size: 3rem;
+      background: #f3efff;
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+
+    .step-card h3 {
+      font-size: 1.7rem;
+      margin-bottom: 12px;
+      color: var(--violet);
+    }
+
+    .scroll-btn {
+      background: white;
+      border: 2px solid var(--violet);
+      color: var(--violet);
+      font-size: 2rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.06);
+      flex-shrink: 0;
+    }
+
+    .scroll-btn:hover {
+      background: var(--violet);
+      color: white;
+    }
+
+    /* ТАРИФЫ */
+    .tariffs-grid {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      margin: 40px 0 60px;
+      flex-wrap: wrap;
+    }
+
+    .tariff-card {
+      background: white;
+      border-radius: 30px;
+      padding: 35px 25px;
+      flex: 1 1 280px;
+      max-width: 340px;
+      box-shadow: 0 25px 45px rgba(0,0,0,0.06);
+      border: 2px solid #ede7ff;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.25s;
+    }
+
+    .tariff-card.popular {
+      outline: 3px solid var(--yellow);
+      outline-offset: 3px;
+      border: 2px solid var(--yellow);
+      transform: scale(1.02);
+      box-shadow: 0 30px 50px rgba(108, 60, 240, 0.18);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--yellow);
+      color: #000;
+      font-weight: 800;
+      padding: 6px 25px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+    }
+
+    .price {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--violet);
+      margin: 12px 0;
+    }
+
+    .tariff-btn {
+      background: var(--black);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 40px;
+      font-weight: 700;
+      margin-top: auto;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .tariff-card.popular .tariff-btn {
+      background: var(--gradient-cta);
+      box-shadow: 0 10px 25px rgba(108, 60, 240, 0.5);
+    }
+
+    /* ВИДЕОПРЕВЬЮ */
+    .video-preview {
+      background: #0b0b0b;
+      border-radius: 36px;
+      padding: 20px;
+      margin: 40px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: linear-gradient(145deg, #1a1528, #0f0b1a);
+    }
+
+    .video-frame {
+      width: 100%;
+      max-width: 750px;
+      aspect-ratio: 16/9;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* ФОРМА С ПРОГРЕСС-БАРОМ */
+    .signup-section {
+      background: #faf8ff;
+      border-radius: 50px;
+      padding: 50px 35px;
+      margin: 50px 0;
+      text-align: center;
+    }
+
+    .progress-bar-bg {
+      height: 12px;
+      background: #e2dafc;
+      border-radius: 20px;
+      margin: 20px auto 35px;
+      max-width: 450px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--gradient-cta);
+      border-radius: 20px;
+      transition: width 0.4s ease;
+    }
+
+    .form-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .form-grid input {
+      padding: 18px 22px;
+      border: 2px solid #ddd6f7;
+      border-radius: 40px;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .form-grid input:focus {
+      border-color: var(--violet);
+      box-shadow: 0 0 0 4px rgba(108,60,240,0.1);
+    }
+
+    .submit-btn {
+      background: var(--yellow);
+      color: #000;
+      font-weight: 800;
+      font-size: 1.2rem;
+      border: none;
+      padding: 18px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: #ffea4c;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+    }
+
+    @media (max-width: 750px) {
+      .sticky-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .tariffs-grid {
+        flex-direction: column;
+        align-items: center;
+      }
+      .tariff-card.popular {
+        transform: none;
+      }
+      .step-card {
+        flex: 0 0 260px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="sticky-header">
+    <div class="logo">⏳ Deadline <span>Destroyer</span></div>
+    <div class="discount-timer">
+      🔥 Скидка 40% исчезнет через 
+      <span id="timer">23:59:59</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero секция -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1>
+          Уничтожь дедлайны<br> 
+          <span class="highlight">за 7 дней</span>
+        </h1>
+        <p>Практический курс, который превратит хаос в чёткий план. Начни всё успевать без стресса и ночных авралов.</p>
+        <a href="#signup" class="cta-button">⚡ Записаться со скидкой</a>
+      </div>
+      <div class="hero-visual">
+        <div class="geometric-badge">
+          <span>📅❌</span>
+          <div class="big-number">2×</div>
+          <span style="font-weight:700;">продуктивность</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Что внутри: горизонтальный скролл с кнопками -->
+    <h2 class="section-title"><span>🧩</span> Что внутри курса</h2>
+    <div class="scroll-wrapper">
+      <div class="steps-scroll-container">
+        <button class="scroll-btn" id="scrollLeft" aria-label="Назад">‹</button>
+        <div class="steps-scroll" id="stepsScroll">
+          <div class="step-card">
+            <div class="step-icon">🎯</div>
+            <h3>01. Диагностика</h3>
+            <p>Найдём твоих пожирателей времени. Аудит привычек и персональная карта эффективности.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-icon">⚙️</div>
+            <h3>02. Система</h3>
+            <p>Внедрим технику «Блок-лавина» и настроим рабочее пространство под твой ритм.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-icon">🚀</div>
+            <h3>03. Автоматизация</h3>
+            <p>Шаблоны, ритуалы и триггеры. Ты перестанешь думать о дедлайнах — они просто исчезнут.</p>
+          </div>
+        </div>
+        <button class="scroll-btn" id="scrollRight" aria-label="Вперёд">›</button>
+      </div>
+    </div>
+
+    <!-- Тарифы -->
+    <h2 class="section-title"><span>💎</span> Выбери свой темп</h2>
+    <div class="tariffs-grid">
+      <div class="tariff-card">
+        <h3>«Старт»</h3>
+        <div class="price">4 900 ₽</div>
+        <ul style="list-style:none; padding:0; margin:20px 0;">
+          <li>✓ 3 модуля</li>
+          <li>✓ Чек-листы</li>
+          <li>✓ Доступ 30 дней</li>
+        </ul>
+        <button class="tariff-btn">Выбрать</button>
+      </div>
+      <div class="tariff-card popular">
+        <div class="popular-badge">🔥 ХИТ ПРОДАЖ</div>
+        <h3>«Профи»</h3>
+        <div class="price">9 900 ₽</div>
+        <ul style="list-style:none; padding:0; margin:20px 0;">
+          <li>✓ Все модули + бонусы</li>
+          <li>✓ 2 воркшопа с экспертом</li>
+          <li>✓ Доступ навсегда</li>
+          <li>✓ Личный трекер привычек</li>
+        </ul>
+        <button class="tariff-btn">Хочу этот</button>
+      </div>
+      <div class="tariff-card">
+        <h3>«VIP-Группа»</h3>
+        <div class="price">24 900 ₽</div>
+        <ul style="list-style:none; padding:0; margin:20px 0;">
+          <li>✓ Всё из «Профи»</li>
+          <li>✓ 4 сессии с коучем</li>
+          <li>✓ Разбор вашего календаря</li>
+        </ul>
+        <button class="tariff-btn">Связаться</button>
+      </div>
+    </div>
+
+    <!-- Видеопревью курса -->
+    <h2 class="section-title"><span>▶️</span> Посмотри, как проходит обучение</h2>
+    <div class="video-preview">
+      <div class="video-frame">
+        <!-- Встроенное видео-превью (заглушка YouTube) -->
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=1&rel=0&showinfo=0" 
+                title="Превью курса Deadline Destroyer" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+        </iframe>
+      </div>
+      <p style="color:#ddd; margin-top:15px;">⚡ 2 минуты, которые изменят твоё отношение к времени</p>
+    </div>
+
+    <!-- Форма регистрации с прогресс-баром -->
+    <section id="signup" class="signup-section">
+      <h2 style="font-size:2.2rem; color:var(--violet);">Забронируй место со скидкой</h2>
+      <div class="progress-bar-bg">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="form-grid" id="signupForm">
+        <input type="text" id="name" placeholder="Имя и фамилия" autocomplete="name">
+        <input type="email" id="email" placeholder="Email" autocomplete="email">
+        <input type="tel" id="phone" placeholder="Телефон" autocomplete="tel">
+        <button class="submit-btn" id="submitBtn">🎯 Отправить заявку</button>
+      </div>
+      <p style="margin-top:12px; color:#555;">Заполните все поля — и бонусный чек-лист ваш!</p>
+    </section>
+  </main>
+
+  <footer>
+    © Deadline Destroyer — 2025. Перестань откладывать жизнь.
+  </footer>
+
+  <script>
+    (function() {
+      // --- 1. ТАЙМЕР СКИДКИ (обратный отсчёт 24 часа с загрузки) ---
+      const timerElement = document.getElementById('timer');
+      let totalSeconds = 24 * 60 * 60; // 24 часа
+
+      function updateTimerDisplay() {
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        timerElement.textContent = 
+          String(hours).padStart(2, '0') + ':' +
+          String(minutes).padStart(2, '0') + ':' +
+          String(seconds).padStart(2, '0');
+      }
+
+      function startCountdown() {
+        updateTimerDisplay();
+        const interval = setInterval(() => {
+          if (totalSeconds <= 0) {
+            clearInterval(interval);
+            timerElement.textContent = "00:00:00";
+            timerElement.style.background = "#d32f2f";
+            return;
+          }
+          totalSeconds--;
+          updateTimerDisplay();
+        }, 1000);
+      }
+
+      startCountdown();
+
+      // --- 2. ГОРИЗОНТАЛЬНАЯ ПРОКРУТКА ШАГОВ (кнопки вперёд/назад) ---
+      const scrollContainer = document.getElementById('stepsScroll');
+      const btnLeft = document.getElementById('scrollLeft');
+      const btnRight = document.getElementById('scrollRight');
+
+      function scrollSteps(direction) {
+        const scrollAmount = 320; // ширина карточки + gap
+        if (scrollContainer) {
+          scrollContainer.scrollBy({
+            left: direction === 'right' ? scrollAmount : -scrollAmount,
+            behavior: 'smooth'
+          });
+        }
+      }
+
+      if (btnLeft && btnRight) {
+        btnLeft.addEventListener('click', () => scrollSteps('left'));
+        btnRight.addEventListener('click', () => scrollSteps('right'));
+      }
+
+      // Опционально: скрывать кнопки на краях (необязательно, но улучшает UX)
+      function updateScrollButtons() {
+        if (!scrollContainer) return;
+        const tolerance = 10;
+        if (scrollContainer.scrollLeft <= tolerance) {
+          btnLeft.style.opacity = '0.5';
+        } else {
+          btnLeft.style.opacity = '1';
+        }
+        if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - tolerance) {
+          btnRight.style.opacity = '0.5';
+        } else {
+          btnRight.style.opacity = '1';
+        }
+      }
+
+      scrollContainer?.addEventListener('scroll', updateScrollButtons);
+      window.addEventListener('load', updateScrollButtons);
+
+      // --- 3. ПРОГРЕСС-БАР ФОРМЫ (расчёт процента заполненных полей) ---
+      const nameInput = document.getElementById('name');
+      const emailInput = document.getElementById('email');
+      const phoneInput = document.getElementById('phone');
+      const progressFill = document.getElementById('progressFill');
+      const submitBtn = document.getElementById('submitBtn');
+
+      const fields = [nameInput, emailInput, phoneInput];
+
+      function calculateProgress() {
+        const filledCount = fields.filter(field => field && field.value.trim() !== '').length;
+        const percent = (filledCount / fields.length) * 100;
+        if (progressFill) {
+          progressFill.style.width = percent + '%';
+        }
+        return percent;
+      }
+
+      fields.forEach(field => {
+        if (field) {
+          field.addEventListener('input', calculateProgress);
+        }
+      });
+
+      // Обработчик отправки (демо)
+      if (submitBtn) {
+        submitBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const progress = calculateProgress();
+          if (progress < 100) {
+            alert('🚀 Заполните все поля, чтобы открыть бонусный чек-лист!');
+          } else {
+            alert('✅ Заявка принята! Мы отправили чек-лист на твою почту (демо).');
+            // тут может быть реальная отправка
+          }
+        });
+      }
+
+      // Инициализация прогресса
+      calculateProgress();
+
+      // --- 4. НЕБОЛЬШАЯ АНИМАЦИЯ СКРОЛЛ-СТОРИТЕЛЛИНГА (появление элементов) ---
+      const observerOptions = {
+        threshold: 0.2,
+        rootMargin: '0px 0px -30px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.step-card, .tariff-card, .video-preview, .signup-section').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(25px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+      });
+
+      // Сразу показываем hero
+      document.querySelector('.hero')?.style.setProperty('opacity', '1');
+    })();
+  </script>
+</body>
+</html>

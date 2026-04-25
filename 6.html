@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Свадебное приглашение | Анна и Михаил</title>
+  <!-- Google Fonts: Great Vibes + Raleway -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --soft-pink: #f9e1e1;
+      --golden-beige: #f7f0e6;
+      --cream: #fffcf5;
+      --dusty-rose: #e6c3c3;
+      --text-dark: #5a4a4a;
+      --text-soft: #7b6b6b;
+      --accent-gold: #c9a87c;
+      --white-mist: rgba(255, 250, 245, 0.7);
+      --shadow-soft: 0 20px 35px rgba(180, 140, 140, 0.12);
+      --border-light: rgba(200, 160, 140, 0.25);
+      --font-script: 'Great Vibes', cursive;
+      --font-main: 'Raleway', sans-serif;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: linear-gradient(145deg, #fce8e0 0%, #fdf3e4 40%, #fbe9ec 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      margin: 0;
+      position: relative;
+      color: var(--text-dark);
+      line-height: 1.5;
+    }
+
+    /* Акварельные фоновые элементы (SVG) */
+    .watercolor-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .watercolor-bg svg {
+      position: absolute;
+      opacity: 0.2;
+    }
+
+    .flower-left {
+      bottom: 0;
+      left: -20px;
+      width: 280px;
+      height: auto;
+      opacity: 0.18;
+      transform: rotate(2deg);
+    }
+
+    .flower-right {
+      top: 5%;
+      right: -30px;
+      width: 300px;
+      height: auto;
+      opacity: 0.16;
+      transform: rotate(-3deg);
+    }
+
+    .flower-top-center {
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%) rotate(5deg);
+      width: 240px;
+      opacity: 0.13;
+    }
+
+    /* Основной контейнер */
+    .invitation-wrapper {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 750px;
+      background: rgba(255, 250, 245, 0.75);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      background: linear-gradient(135deg, rgba(255, 252, 248, 0.8) 0%, rgba(255, 245, 240, 0.75) 100%);
+      border-radius: 3.5rem 3.5rem 3rem 3rem;
+      box-shadow: var(--shadow-soft), 0 0 0 1px rgba(255, 250, 245, 0.7);
+      padding: 2.8rem 2.2rem;
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-light);
+      animation: fadeInUp 1s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    /* Анимация появления */
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section {
+      animation: fadeInUp 0.9s ease both;
+      margin-bottom: 2.2rem;
+    }
+
+    .section:nth-child(1) { animation-delay: 0.1s; }
+    .section:nth-child(2) { animation-delay: 0.25s; }
+    .section:nth-child(3) { animation-delay: 0.4s; }
+    .section:nth-child(4) { animation-delay: 0.55s; }
+    .section:nth-child(5) { animation-delay: 0.7s; }
+
+    /* Имена */
+    .names-block {
+      text-align: center;
+      position: relative;
+    }
+
+    .names {
+      font-family: var(--font-script);
+      font-size: clamp(3.8rem, 10vw, 5.5rem);
+      font-weight: 400;
+      color: #b48c6c;
+      line-height: 1.15;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+      margin-bottom: 0.4rem;
+    }
+
+    .and-sign {
+      font-family: var(--font-script);
+      font-size: 2.5rem;
+      color: #c7a586;
+      display: block;
+      margin: -0.5rem 0 0.2rem;
+      opacity: 0.9;
+    }
+
+    .date-location {
+      text-align: center;
+      font-weight: 400;
+      color: var(--text-soft);
+      font-size: 1.2rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: rgba(255, 250, 245, 0.6);
+      padding: 0.8rem 0;
+      border-top: 1px dashed #deb887;
+      border-bottom: 1px dashed #deb887;
+      margin: 0.5rem 0 1.2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .program {
+      background: rgba(255, 245, 240, 0.55);
+      backdrop-filter: blur(8px);
+      border-radius: 2rem;
+      padding: 1.5rem 1.8rem;
+      margin: 1.8rem 0;
+      border: 1px solid rgba(222, 184, 135, 0.25);
+    }
+
+    .program h3 {
+      font-family: var(--font-script);
+      font-size: 2.2rem;
+      font-weight: 400;
+      color: #b48c6c;
+      margin-bottom: 0.8rem;
+      text-align: center;
+    }
+
+    .timeline {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.8rem;
+      font-weight: 400;
+    }
+
+    .timeline li {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255, 250, 245, 0.7);
+      padding: 0.6rem 1.2rem;
+      border-radius: 2.5rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .time {
+      font-weight: 600;
+      color: #a77b5a;
+      font-size: 1.1rem;
+    }
+
+    .event {
+      color: #6b5b54;
+    }
+
+    /* Форма */
+    .rsvp-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      margin-top: 0.8rem;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .form-group {
+      flex: 1 1 220px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.8px;
+      color: #7b6357;
+      margin-bottom: 0.2rem;
+      text-transform: uppercase;
+    }
+
+    input, select {
+      background: rgba(255, 250, 245, 0.85);
+      backdrop-filter: blur(6px);
+      border: 1px solid #e5cec4;
+      border-radius: 2rem;
+      padding: 0.85rem 1.3rem;
+      font-family: var(--font-main);
+      font-size: 1rem;
+      color: #4a3c36;
+      outline: none;
+      transition: all 0.25s;
+      box-shadow: 0 4px 10px rgba(180, 140, 140, 0.08);
+      background: #fffcf7;
+    }
+
+    input:focus, select:focus {
+      border-color: #c9a87c;
+      box-shadow: 0 0 0 3px rgba(201, 168, 124, 0.25);
+      background: #ffffff;
+    }
+
+    .btn {
+      background: #dbb592;
+      border: none;
+      color: white;
+      font-weight: 500;
+      letter-spacing: 1.2px;
+      padding: 1rem 2.2rem;
+      border-radius: 3rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, #cfad88, #b68b65);
+      box-shadow: 0 8px 18px rgba(180, 130, 100, 0.3);
+      transition: all 0.3s;
+      text-transform: uppercase;
+      backdrop-filter: blur(5px);
+      margin-top: 0.5rem;
+      align-self: center;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #dbb592, #c39b76);
+      box-shadow: 0 12px 22px rgba(170, 120, 90, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(2px);
+    }
+
+    .thanks-message {
+      margin-top: 1.8rem;
+      padding: 1.2rem;
+      background: rgba(245, 235, 220, 0.8);
+      border-radius: 2rem;
+      text-align: center;
+      font-style: italic;
+      color: #7b5e4b;
+      backdrop-filter: blur(12px);
+      font-weight: 500;
+      animation: fadeInUp 0.6s ease;
+      border: 1px solid #edd5c4;
+    }
+
+    .guest-counter {
+      font-size: 0.9rem;
+      margin-top: 0.8rem;
+      color: #8b6f5f;
+    }
+
+    hr {
+      border: 0.5px solid rgba(200, 160, 130, 0.25);
+      margin: 1.5rem 0 1rem;
+    }
+
+    @media (max-width: 550px) {
+      body {
+        padding: 0.8rem;
+      }
+      .invitation-wrapper {
+        padding: 1.8rem 1.2rem;
+        border-radius: 2.5rem;
+      }
+      .timeline {
+        gap: 0.8rem;
+      }
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Акварельные фоновые SVG иллюстрации -->
+  <div class="watercolor-bg">
+    <svg class="flower-left" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="70" cy="130" r="45" fill="#f9d9d0" opacity="0.5" />
+      <circle cx="120" cy="110" r="35" fill="#f5c6b8" opacity="0.6" />
+      <circle cx="45" cy="85" r="30" fill="#fbe0d8" opacity="0.55" />
+      <path d="M70 40 Q90 70 70 90 Q50 70 70 40" fill="#eac7b2" opacity="0.45" />
+      <circle cx="95" cy="55" r="22" fill="#f7d7c4" opacity="0.6" />
+    </svg>
+    <svg class="flower-right" viewBox="0 0 200 200" fill="none">
+      <circle cx="130" cy="50" r="42" fill="#fadcd3" opacity="0.45" />
+      <circle cx="85" cy="70" r="33" fill="#f5cbbc" opacity="0.55" />
+      <circle cx="155" cy="100" r="28" fill="#fbe5da" opacity="0.5" />
+      <path d="M100 20 Q125 45 100 70 Q75 45 100 20" fill="#e8c4b0" opacity="0.5" />
+    </svg>
+    <svg class="flower-top-center" viewBox="0 0 200 140" fill="none">
+      <circle cx="100" cy="70" r="38" fill="#fde4d6" opacity="0.4" />
+      <circle cx="60" cy="50" r="25" fill="#f5cfbe" opacity="0.5" />
+      <circle cx="140" cy="45" r="28" fill="#fadfd0" opacity="0.45" />
+    </svg>
+  </div>
+
+  <!-- Приглашение -->
+  <main class="invitation-wrapper">
+    <!-- Имена молодожёнов -->
+    <div class="section names-block">
+      <h1 class="names">Анна</h1>
+      <span class="and-sign">&</span>
+      <h1 class="names" style="margin-top: -0.2rem;">Михаил</h1>
+    </div>
+
+    <!-- Дата и место -->
+    <div class="section date-location">
+      <span>15 июня 2026 • 16:00</span><br>
+      <span style="font-size: 1rem; text-transform: none; letter-spacing: 0.5px;">Усадьба «Золотая роза», Московская обл.</span>
+    </div>
+
+    <!-- Программа вечера -->
+    <div class="section program">
+      <h3>Программа</h3>
+      <ul class="timeline">
+        <li><span class="time">16:00</span><span class="event">Сбор гостей</span></li>
+        <li><span class="time">17:00</span><span class="event">Церемония</span></li>
+        <li><span class="time">18:30</span><span class="event">Банкет</span></li>
+        <li><span class="time">21:00</span><span class="event">Танцы</span></li>
+      </ul>
+    </div>
+
+    <!-- Форма подтверждения RSVP -->
+    <div class="section">
+      <h3 style="font-family: var(--font-script); font-size: 2.2rem; font-weight: 400; color: #b48c6c; text-align: center; margin-bottom: 0.3rem;">Подтверждение</h3>
+      <form id="rsvpForm" class="rsvp-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="guestName">Ваше имя</label>
+            <input type="text" id="guestName" placeholder="Александра" required autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label for="guestEmail">Email</label>
+            <input type="email" id="guestEmail" placeholder="example@mail.ru" required autocomplete="email">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="attendance">Присутствие</label>
+            <select id="attendance" required>
+              <option value="" disabled selected>Выберите...</option>
+              <option value="yes">Обязательно буду</option>
+              <option value="maybe">Возможно</option>
+              <option value="no">К сожалению, нет</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="guestsCount">Количество гостей</label>
+            <select id="guestsCount">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn">Отправить</button>
+      </form>
+
+      <!-- Блок благодарности (скрыт по умолчанию) -->
+      <div id="thankYouMessage" class="thanks-message" style="display: none;"></div>
+      <div id="guestListInfo" class="guest-counter" style="text-align: center;"></div>
+    </div>
+
+    <hr>
+    <div style="text-align: center; font-size: 0.85rem; color: #a39284;">С любовью, Анна и Михаил</div>
+  </main>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // Ключ для localStorage
+      const STORAGE_KEY = 'wedding_rsvp_guests';
+
+      // Получаем элементы DOM
+      const form = document.getElementById('rsvpForm');
+      const thankYouDiv = document.getElementById('thankYouMessage');
+      const guestListInfo = document.getElementById('guestListInfo');
+      const nameInput = document.getElementById('guestName');
+      const emailInput = document.getElementById('guestEmail');
+      const attendanceSelect = document.getElementById('attendance');
+      const guestsCountSelect = document.getElementById('guestsCount');
+
+      // Функция чтения гостей из localStorage
+      function getGuestsFromStorage() {
+        try {
+          const data = localStorage.getItem(STORAGE_KEY);
+          return data ? JSON.parse(data) : [];
+        } catch (e) {
+          console.warn('Ошибка чтения localStorage', e);
+          return [];
+        }
+      }
+
+      // Сохранение массива гостей в localStorage
+      function saveGuestsToStorage(guestsArray) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(guestsArray));
+        } catch (e) {
+          console.warn('Не удалось сохранить данные', e);
+        }
+      }
+
+      // Добавление гостя (проверка на дубликат по email или имени+email)
+      function addGuest(guest) {
+        const guests = getGuestsFromStorage();
+        // Простая проверка: если уже есть такой email, обновим запись (или можно запретить)
+        const existingIndex = guests.findIndex(g => g.email === guest.email);
+        if (existingIndex !== -1) {
+          // Обновляем существующую запись
+          guests[existingIndex] = { ...guests[existingIndex], ...guest, updatedAt: new Date().toISOString() };
+        } else {
+          guests.push({
+            ...guest,
+            id: Date.now(),
+            createdAt: new Date().toISOString()
+          });
+        }
+        saveGuestsToStorage(guests);
+        return guests;
+      }
+
+      // Отображение общего количества подтвердивших
+      function renderGuestCounter() {
+        const guests = getGuestsFromStorage();
+        const confirmed = guests.filter(g => g.attendance === 'yes' || g.attendance === 'maybe').length;
+        if (guests.length > 0) {
+          guestListInfo.textContent = `Уже подтвердили: ${confirmed} ${getGuestWord(confirmed)}`;
+        } else {
+          guestListInfo.textContent = '';
+        }
+      }
+
+      function getGuestWord(count) {
+        if (count === 1) return 'гость';
+        if (count > 1 && count < 5) return 'гостя';
+        return 'гостей';
+      }
+
+      // Показать благодарность
+      function showThankYou(guestName, attendanceStatus) {
+        let message = '';
+        if (attendanceStatus === 'yes') {
+          message = `Спасибо, ${guestName}! Рады, что вы будете с нами!`;
+        } else if (attendanceStatus === 'maybe') {
+          message = `Спасибо, ${guestName}! Будем ждать вас!`;
+        } else if (attendanceStatus === 'no') {
+          message = `Спасибо за ответ, ${guestName}. Нам будет вас не хватать.`;
+        } else {
+          message = `Спасибо, ${guestName}!`;
+        }
+        thankYouDiv.textContent = message;
+        thankYouDiv.style.display = 'block';
+        // Автоматически скрываем через 7 секунд
+        setTimeout(() => {
+          if (thankYouDiv) thankYouDiv.style.display = 'none';
+        }, 7000);
+      }
+
+      // Обработчик отправки формы
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Собираем данные
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim().toLowerCase();
+        const attendance = attendanceSelect.value;
+        const guestsCount = parseInt(guestsCountSelect.value, 10) || 1;
+
+        if (!name || !email || !attendance) {
+          alert('Пожалуйста, заполните все обязательные поля.');
+          return;
+        }
+
+        // Простая валидация email
+        if (!email.includes('@') || !email.includes('.')) {
+          alert('Введите корректный email адрес.');
+          return;
+        }
+
+        const guestData = {
+          name,
+          email,
+          attendance,
+          guestsCount
+        };
+
+        // Сохраняем в localStorage
+        addGuest(guestData);
+
+        // Показываем благодарность
+        showThankYou(name, attendance);
+
+        // Обновляем счётчик гостей
+        renderGuestCounter();
+
+        // Сбрасываем форму (но не полностью, можно оставить имя пустым)
+        form.reset();
+        // Опционально можно очистить не все поля, но reset удобен.
+        // Установим значения по умолчанию для select обратно
+        attendanceSelect.value = '';
+        guestsCountSelect.value = '1';
+        // Убираем фокус с кнопки
+        document.activeElement?.blur();
+      });
+
+      // При загрузке страницы отображаем актуальный счётчик
+      window.addEventListener('DOMContentLoaded', function() {
+        renderGuestCounter();
+        // Также можно показать последнего добавленного гостя, но не обязательно
+      });
+
+      // Дополнительно: чистим старые сообщения при фокусе на форме
+      nameInput.addEventListener('focus', () => {
+        if (thankYouDiv.style.display === 'block') {
+          thankYouDiv.style.display = 'none';
+        }
+      });
+
+    })();
+  </script>
+</body>
+</html>

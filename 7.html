@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAW — веб-студия</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --black: #000;
+            --white: #fff;
+            --border-width: 4px;
+            --hr-height: 6px;
+            --font-base: 16px;
+            --font-h1: 48px;
+            --font-h2: 28px;
+            --font-h3: 20px;
+            --font-small: 14px;
+            --padding-section: 40px;
+            --padding-container: 32px;
+        }
+
+        html {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: var(--font-base);
+            line-height: 1.5;
+            background: var(--white);
+            color: var(--black);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: var(--white);
+            color: var(--black);
+            min-height: 100vh;
+            padding: 28px 24px 40px;
+            letter-spacing: -0.02em;
+        }
+
+        /* --- HR: толстая чёрная полоса --- */
+        hr {
+            border: none;
+            height: var(--hr-height);
+            background: var(--black);
+            margin: 0;
+            width: 100%;
+        }
+
+        /* --- ХЕДЕР --- */
+        .header {
+            padding: 16px 0 var(--padding-section);
+        }
+
+        .header__logo {
+            font-size: 64px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            line-height: 1;
+            display: inline-block;
+            border: var(--border-width) solid var(--black);
+            padding: 12px 20px 10px;
+            transition: background 0.05s ease, color 0.05s ease;
+            cursor: default;
+            user-select: none;
+        }
+
+        .header__logo:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .header__tagline {
+            font-size: var(--font-small);
+            font-weight: 400;
+            margin-top: 16px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--black);
+        }
+
+        /* --- СЕКЦИИ --- */
+        .section {
+            padding: var(--padding-section) 0;
+        }
+
+        /* --- МАНИФЕСТ --- */
+        .manifesto {
+            font-size: var(--font-h1);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            text-transform: uppercase;
+            word-break: break-word;
+            max-width: 900px;
+        }
+
+        .manifesto__cursor {
+            display: inline-block;
+            width: 18px;
+            height: 42px;
+            background: var(--black);
+            margin-left: 4px;
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* --- КАРТОЧКИ УСЛУГ --- */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            width: 100%;
+        }
+
+        .card {
+            border: var(--border-width) solid var(--black);
+            padding: 32px 28px 28px;
+            background: var(--white);
+            color: var(--black);
+            transition: background 0.05s ease, color 0.05s ease;
+            cursor: default;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 220px;
+            margin-right: calc(-1 * var(--border-width));
+            /* нахлёст рамок */
+        }
+
+        .card:last-child {
+            margin-right: 0;
+        }
+
+        .card:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .card__number {
+            font-size: var(--font-small);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
+
+        .card:hover .card__number {
+            opacity: 1;
+        }
+
+        .card__title {
+            font-size: var(--font-h2);
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .card__desc {
+            font-size: var(--font-small);
+            font-weight: 400;
+            line-height: 1.4;
+            letter-spacing: 0.02em;
+            margin-top: auto;
+        }
+
+        /* --- КНОПКА И ФОРМА --- */
+        .contact-wrapper {
+            position: relative;
+        }
+
+        .btn-contact {
+            display: inline-block;
+            background: var(--black);
+            color: var(--white);
+            border: var(--border-width) solid var(--black);
+            padding: 16px 40px;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: var(--font-h3);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.05s ease, color 0.05s ease;
+            text-align: center;
+            min-width: 240px;
+            -webkit-appearance: none;
+            appearance: none;
+            border-radius: 0;
+        }
+
+        .btn-contact:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .btn-contact:active {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .btn-contact:focus-visible {
+            outline: 3px solid var(--black);
+            outline-offset: 4px;
+        }
+
+        /* Форма — скрыта по умолчанию, появляется мгновенно */
+        .contact-form {
+            display: none;
+            margin-top: 24px;
+            border: var(--border-width) solid var(--black);
+            padding: 28px;
+            background: var(--white);
+            max-width: 560px;
+        }
+
+        .contact-form--visible {
+            display: block;
+        }
+
+        .contact-form__title {
+            font-size: var(--font-h3);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 20px;
+        }
+
+        .contact-form__group {
+            margin-bottom: 16px;
+        }
+
+        .contact-form__label {
+            display: block;
+            font-size: var(--font-small);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 6px;
+        }
+
+        .contact-form__input {
+            width: 100%;
+            padding: 12px 14px;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: var(--font-base);
+            border: var(--border-width) solid var(--black);
+            background: var(--white);
+            color: var(--black);
+            border-radius: 0;
+            -webkit-appearance: none;
+            appearance: none;
+            letter-spacing: 0.02em;
+            transition: background 0.05s ease;
+        }
+
+        .contact-form__input:focus {
+            outline: none;
+            background: #f8f8f8;
+        }
+
+        .contact-form__input::placeholder {
+            color: #999;
+            font-size: var(--font-small);
+            letter-spacing: 0.04em;
+        }
+
+        .contact-form__input--error {
+            border-width: 6px;
+        }
+
+        .contact-form__error {
+            display: none;
+            font-size: var(--font-small);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-top: 4px;
+            color: var(--black);
+        }
+
+        .contact-form__error--visible {
+            display: block;
+        }
+
+        .contact-form__submit {
+            display: inline-block;
+            background: var(--black);
+            color: var(--white);
+            border: var(--border-width) solid var(--black);
+            padding: 14px 36px;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: var(--font-base);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.05s ease, color 0.05s ease;
+            margin-top: 8px;
+            border-radius: 0;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .contact-form__submit:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .contact-form__submit:focus-visible {
+            outline: 3px solid var(--black);
+            outline-offset: 4px;
+        }
+
+        /* --- ФУТЕР --- */
+        .footer {
+            padding: var(--padding-section) 0 0;
+            font-size: var(--font-h3);
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            line-height: 1.6;
+        }
+
+        .footer__strikethrough {
+            position: relative;
+            display: inline-block;
+            padding: 0 4px;
+        }
+
+        .footer__strikethrough::after {
+            content: '';
+            position: absolute;
+            top: 48%;
+            left: -6px;
+            right: -6px;
+            height: 5px;
+            background: var(--black);
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .footer__brand {
+            margin-top: 28px;
+            font-size: var(--font-small);
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            opacity: 0.6;
+        }
+
+        /* ==================== */
+        /* МОБИЛЬНАЯ ВЕРСИЯ   */
+        /* БЕЗ КОМПРОМИССОВ   */
+        /* ==================== */
+        @media (max-width: 768px) {
+            :root {
+                --border-width: 6px;
+                --hr-height: 8px;
+                --font-base: 18px;
+                --font-h1: 36px;
+                --font-h2: 24px;
+                --font-h3: 20px;
+                --font-small: 15px;
+                --padding-section: 32px;
+            }
+
+            body {
+                padding: 18px 14px 32px;
+            }
+
+            .header__logo {
+                font-size: 44px;
+                padding: 10px 16px 8px;
+                border-width: var(--border-width);
+            }
+
+            .manifesto {
+                font-size: var(--font-h1);
+                line-height: 1.2;
+            }
+
+            .manifesto__cursor {
+                width: 14px;
+                height: 30px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .card {
+                margin-right: 0;
+                margin-bottom: calc(-1 * var(--border-width));
+                min-height: 160px;
+                padding: 24px 20px 20px;
+                border-width: var(--border-width);
+            }
+
+            .card:last-child {
+                margin-bottom: 0;
+            }
+
+            .btn-contact {
+                width: 100%;
+                min-width: unset;
+                padding: 18px 28px;
+                font-size: var(--font-h3);
+                border-width: var(--border-width);
+            }
+
+            .contact-form {
+                max-width: 100%;
+                border-width: var(--border-width);
+                padding: 22px 18px;
+            }
+
+            .contact-form__input {
+                border-width: var(--border-width);
+                padding: 14px 12px;
+                font-size: var(--font-base);
+            }
+
+            .contact-form__input--error {
+                border-width: 8px;
+            }
+
+            .contact-form__submit {
+                width: 100%;
+                text-align: center;
+                border-width: var(--border-width);
+                padding: 16px 28px;
+                font-size: var(--font-base);
+            }
+
+            .footer {
+                font-size: 22px;
+            }
+
+            .footer__strikethrough::after {
+                height: 6px;
+                top: 47%;
+            }
+
+            hr {
+                height: var(--hr-height);
+            }
+        }
+
+        @media (max-width: 400px) {
+            :root {
+                --border-width: 8px;
+                --hr-height: 10px;
+                --font-h1: 28px;
+                --font-h2: 21px;
+                --font-h3: 18px;
+                --font-base: 17px;
+                --font-small: 14px;
+                --padding-section: 26px;
+            }
+
+            body {
+                padding: 12px 8px 24px;
+            }
+
+            .header__logo {
+                font-size: 32px;
+                padding: 8px 12px 6px;
+            }
+
+            .manifesto {
+                font-size: var(--font-h1);
+            }
+
+            .manifesto__cursor {
+                width: 10px;
+                height: 22px;
+            }
+
+            .card {
+                padding: 18px 14px 16px;
+                min-height: 140px;
+            }
+
+            .btn-contact {
+                padding: 16px 20px;
+                font-size: var(--font-h3);
+            }
+
+            .contact-form {
+                padding: 16px 12px;
+            }
+
+            .contact-form__input {
+                padding: 12px 10px;
+            }
+
+            .footer {
+                font-size: 18px;
+            }
+
+            .footer__strikethrough::after {
+                height: 7px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ХЕДЕР ===== -->
+    <header class="header">
+        <div class="header__logo" title="RAW — веб-студия">RAW</div>
+        <p class="header__tagline">Веб-студия &middot; Ничего лишнего</p>
+    </header>
+
+    <hr>
+
+    <!-- ===== МАНИФЕСТ ===== -->
+    <section class="section manifesto" aria-label="Манифест студии">
+        МЫ&nbsp;НЕ&nbsp;ДЕЛАЕМ КРАСИВО.<br>
+        МЫ&nbsp;ДЕЛАЕМ РАБОТАЮЩИЕ САЙТЫ.<br>
+        БЕЗ&nbsp;ВОДЫ. БЕЗ&nbsp;ПРЕЗЕНТАЦИЙ.<br>
+        ТОЛЬКО&nbsp;КОД И&nbsp;РЕЗУЛЬТАТ<span class="manifesto__cursor" aria-hidden="true"></span>
+    </section>
+
+    <hr>
+
+    <!-- ===== КАРТОЧКИ УСЛУГ ===== -->
+    <section class="section" aria-label="Услуги студии">
+        <div class="cards">
+            <!-- Карточка 1 -->
+            <article class="card">
+                <div>
+                    <span class="card__number">01</span>
+                    <h3 class="card__title">Вёрстка</h3>
+                </div>
+                <p class="card__desc">Чистый семантический код. Никаких конструкторов. Только&nbsp;HTML,&nbsp;CSS&nbsp;и&nbsp;нативный&nbsp;JS.</p>
+            </article>
+
+            <!-- Карточка 2 -->
+            <article class="card">
+                <div>
+                    <span class="card__number">02</span>
+                    <h3 class="card__title">Дизайн</h3>
+                </div>
+                <p class="card__desc">Брутальная эстетика без украшательств. Функция определяет&nbsp;форму.</p>
+            </article>
+
+            <!-- Карточка 3 -->
+            <article class="card">
+                <div>
+                    <span class="card__number">03</span>
+                    <h3 class="card__title">Скорость</h3>
+                </div>
+                <p class="card__desc">Мгновенная загрузка. Никаких лишних запросов. Сайты,&nbsp;которые&nbsp;летают.</p>
+            </article>
+        </div>
+    </section>
+
+    <hr>
+
+    <!-- ===== КОНТАКТНАЯ КНОПКА + ФОРМА ===== -->
+    <section class="section contact-wrapper" aria-label="Связаться со студией">
+        <button
+        class="btn-contact"
+        id="btnContact"
+        type="button"
+        aria-expanded="false"
+        aria-controls="contactForm"
+        title="Открыть форму связи"
+        >
+        Связаться
+    </button>
+
+    <form
+    class="contact-form"
+    id="contactForm"
+    novalidate
+    aria-hidden="true"
+    >
+    <p class="contact-form__title">Заполните форму</p>
+
+    <div class="contact-form__group">
+        <label class="contact-form__label" for="fieldName">Имя</label>
+        <input
+        class="contact-form__input"
+        type="text"
+        id="fieldName"
+        name="name"
+        placeholder="Ваше имя"
+        autocomplete="name"
+        >
+        <span class="contact-form__error" id="errorName" role="alert">Поле обязательно</span>
+    </div>
+
+    <div class="contact-form__group">
+        <label class="contact-form__label" for="fieldEmail">Почта</label>
+        <input
+        class="contact-form__input"
+        type="email"
+        id="fieldEmail"
+        name="email"
+        placeholder="email@example.com"
+        autocomplete="email"
+        >
+        <span class="contact-form__error" id="errorEmail" role="alert">Поле обязательно</span>
+    </div>
+
+    <div class="contact-form__group">
+        <label class="contact-form__label" for="fieldMessage">Сообщение</label>
+        <input
+        class="contact-form__input"
+        type="text"
+        id="fieldMessage"
+        name="message"
+        placeholder="Опишите задачу"
+        >
+        <span class="contact-form__error" id="errorMessage" role="alert">Поле обязательно</span>
+    </div>
+
+    <button
+    class="contact-form__submit"
+    type="submit"
+    >
+    Отправить
+</button>
+</form>
+</section>
+
+<hr>
+
+<!-- ===== ФУТЕР ===== -->
+<footer class="footer">
+    <p>
+        <span class="footer__strikethrough">никаких презентаций</span>
+        &ensp;
+        <span class="footer__strikethrough">никаких брифов на&nbsp;40&nbsp;страниц</span>
+        &ensp;
+        <span class="footer__strikethrough">никаких правок без&nbsp;причины</span>
+    </p>
+    <p style="margin-top: 12px;">
+        Только сайт. Только результат.
+    </p>
+    <p class="footer__brand">
+        &copy; RAW &mdash; веб-студия без компромиссов
+    </p>
+</footer>
+
+<script>
+    (function() {
+        const btnContact = document.getElementById('btnContact');
+        const contactForm = document.getElementById('contactForm');
+        const fieldName = document.getElementById('fieldName');
+        const fieldEmail = document.getElementById('fieldEmail');
+        const fieldMessage = document.getElementById('fieldMessage');
+        const errorName = document.getElementById('errorName');
+        const errorEmail = document.getElementById('errorEmail');
+        const errorMessage = document.getElementById('errorMessage');
+
+        let formVisible = false;
+
+        // Мгновенное появление/скрытие формы
+        function toggleForm() {
+            formVisible = !formVisible;
+            if (formVisible) {
+                contactForm.classList.add('contact-form--visible');
+                contactForm.setAttribute('aria-hidden', 'false');
+                btnContact.setAttribute('aria-expanded', 'true');
+                // Фокус на первом поле
+                setTimeout(() => fieldName.focus(), 0);
+            } else {
+                contactForm.classList.remove('contact-form--visible');
+                contactForm.setAttribute('aria-hidden', 'true');
+                btnContact.setAttribute('aria-expanded', 'false');
+                clearErrors();
+            }
+        }
+
+        // Очистка ошибок
+        function clearErrors() {
+            [fieldName, fieldEmail, fieldMessage].forEach(f => {
+                f.classList.remove('contact-form__input--error');
+            });
+            [errorName, errorEmail, errorMessage].forEach(e => {
+                e.classList.remove('contact-form__error--visible');
+            });
+        }
+
+        // Показать ошибку у поля
+        function showFieldError(field, errorEl) {
+            field.classList.add('contact-form__input--error');
+            errorEl.classList.add('contact-form__error--visible');
+            field.focus();
+        }
+
+        // Валидация
+        function validateForm() {
+            clearErrors();
+            let valid = true;
+
+            if (!fieldName.value.trim()) {
+                showFieldError(fieldName, errorName);
+                valid = false;
+                return valid;
+            }
+
+            if (!fieldEmail.value.trim()) {
+                showFieldError(fieldEmail, errorEmail);
+                valid = false;
+                return valid;
+            }
+
+            if (!fieldMessage.value.trim()) {
+                showFieldError(fieldMessage, errorMessage);
+                valid = false;
+                return valid;
+            }
+
+            return valid;
+        }
+
+        // Клик по кнопке «Связаться»
+        btnContact.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleForm();
+        });
+
+        // Отправка формы
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (validateForm()) {
+                // Брутальный alert — никаких красивых уведомлений
+                alert('Сообщение отправлено. Мы свяжемся с вами в ближайшее время.');
+                // Сброс формы
+                contactForm.reset();
+                clearErrors();
+                // Скрываем форму
+                toggleForm();
+            }
+        });
+
+        // Закрытие формы по Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && formVisible) {
+                toggleForm();
+                btnContact.focus();
+            }
+        });
+
+        // Сброс ошибок при вводе
+        [fieldName, fieldEmail, fieldMessage].forEach((field, index) => {
+            const errorEls = [errorName, errorEmail, errorMessage];
+            field.addEventListener('input', function() {
+                field.classList.remove('contact-form__input--error');
+                errorEls[index].classList.remove('contact-form__error--visible');
+            });
+        });
+    })();
+</script>
+</body>
+</html>

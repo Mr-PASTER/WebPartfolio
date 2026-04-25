@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinyl Vault — Мини-маркет виниловых пластинок</title>
+    <link href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Roboto+Slab:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #e07a32;
+            --orange-dark: #c5651f;
+            --mustard: #c8960c;
+            --mustard-light: #e0b84c;
+            --brown: #5c3d2e;
+            --brown-dark: #3e2216;
+            --brown-light: #7a5542;
+            --cream: #fdf6e3;
+            --cream-dark: #f0e4c8;
+            --card-bg: #fef9ed;
+            --text-dark: #2c1810;
+            --text-medium: #4a3025;
+            --shadow: 0 4px 16px rgba(60, 30, 10, 0.18);
+            --shadow-lg: 0 8px 32px rgba(40, 20, 5, 0.25);
+            --radius: 6px;
+            --radius-lg: 10px;
+            --font-heading: 'Paytone One', 'Cooper Black', 'Arial Black', 'Segoe UI Black', sans-serif;
+            --font-body: 'Roboto Slab', 'Georgia', 'Times New Roman', serif;
+            --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--cream);
+            background-image:
+                /* Текстура бумаги — едва заметный шум */
+                url("data:image/svg+xml,%3Csvg width='280' height='280' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
+                /* Лёгкий градиент для глубины */
+                radial-gradient(ellipse at 50% 0%, rgba(224, 122, 50, 0.06) 0%, transparent 65%),
+                radial-gradient(ellipse at 85% 100%, rgba(200, 150, 12, 0.05) 0%, transparent 55%);
+            background-color: #fdf6e3;
+            color: var(--text-dark);
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ─────────────── ХЕДЕР ─────────────── */
+        .site-header {
+            background: linear-gradient(175deg, var(--brown-dark) 0%, #4a2818 40%, var(--brown) 100%);
+            color: var(--cream);
+            padding: 20px 28px 22px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(30, 10, 0, 0.5);
+            border-bottom: 3px solid var(--orange);
+            /* Декоративная полоса */
+            background-image:
+                repeating-linear-gradient(90deg,
+                    transparent,
+                    transparent 20px,
+                    rgba(255, 255, 255, 0.015) 20px,
+                    rgba(255, 255, 255, 0.015) 22px),
+                linear-gradient(175deg, var(--brown-dark) 0%, #4a2818 40%, var(--brown) 100%);
+        }
+        .site-header::after {
+            content: '';
+            display: block;
+            height: 3px;
+            background: repeating-linear-gradient(90deg,
+                    var(--mustard) 0px,
+                    var(--mustard) 8px,
+                    var(--orange) 8px,
+                    var(--orange) 16px);
+            margin-top: 14px;
+            border-radius: 2px;
+            opacity: 0.7;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .logo-icon {
+            font-size: 2.8rem;
+            letter-spacing: 2px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+            line-height: 1;
+        }
+        .site-title {
+            font-family: var(--font-heading);
+            font-size: 2.6rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 2px 3px 0 var(--orange-dark), 0 0 30px rgba(224, 122, 50, 0.4);
+            line-height: 1.1;
+        }
+        .site-subtitle {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--mustard-light);
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* ─────────────── ОСНОВНОЙ КОНТЕНТ ─────────────── */
+        .app-container {
+            display: flex;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+            gap: 24px;
+            position: relative;
+            min-height: calc(100vh - 200px);
+        }
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* ─────────────── ФИЛЬТРЫ ─────────────── */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 28px;
+            padding: 8px 0;
+            align-items: center;
+        }
+        .filter-label {
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--brown);
+            margin-right: 4px;
+            opacity: 0.8;
+        }
+        .filter-btn {
+            font-family: var(--font-heading);
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            border: 2px solid var(--brown-light);
+            background: var(--card-bg);
+            color: var(--brown);
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .filter-btn:hover {
+            background: var(--brown-light);
+            color: #fff;
+            border-color: var(--brown-light);
+            box-shadow: 0 4px 12px rgba(90, 50, 30, 0.3);
+            transform: translateY(-2px);
+        }
+        .filter-btn:active {
+            transform: scale(0.94);
+            transition: 0.1s;
+        }
+        .filter-btn.active {
+            background: var(--orange);
+            color: #fff;
+            border-color: var(--orange-dark);
+            box-shadow: 0 4px 16px rgba(224, 122, 50, 0.45);
+            letter-spacing: 2px;
+        }
+        .filter-btn.active::after {
+            content: ' ♫';
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        /* ─────────────── СЕТКА ПЛАСТИНОК ─────────────── */
+        .vinyl-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 36px 28px;
+            padding: 8px 4px;
+        }
+        @media (max-width: 1100px) {
+            .vinyl-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 32px 20px;
+            }
+        }
+        @media (max-width: 680px) {
+            .vinyl-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+                max-width: 420px;
+                margin: 0 auto;
+            }
+        }
+
+        /* ─────────────── КАРТОЧКА ПЛАСТИНКИ ─────────────── */
+        .vinyl-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 16px 16px 20px;
+            box-shadow: var(--shadow);
+            transition: all var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid rgba(180, 140, 100, 0.25);
+            overflow: visible;
+            z-index: 1;
+        }
+        .vinyl-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-6px);
+            z-index: 10;
+            border-color: rgba(224, 122, 50, 0.4);
+            background: #fffdf5;
+        }
+        .vinyl-card.hidden-by-filter {
+            display: none;
+        }
+
+        /* Медиа-контейнер: обложка + винил */
+        .card-media {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 16px;
+            cursor: pointer;
+            overflow: visible;
+            flex-shrink: 0;
+        }
+
+        /* Обложка */
+        .cover-wrapper {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform var(--transition);
+        }
+        .cover-wrapper img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+            transition: transform 0.4s ease;
+        }
+        .vinyl-card:hover .cover-wrapper {
+            transform: translateX(-8px) rotateY(-6deg);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+        .vinyl-card:hover .cover-wrapper img {
+            transform: scale(1.04);
+        }
+
+        /* Виниловый диск */
+        .vinyl-disc {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            z-index: 1;
+            /* Градиент винила: бороздки + центр.лейбл */
+            background:
+                /* Центральное отверстие */
+                radial-gradient(circle at center,
+                    #0a0a0a 0%, #0a0a0a 2.8%,
+                    /* Оранжевый лейбл */
+                    var(--orange) 2.8%, var(--orange) 13.5%,
+                    /* Тонкая тёмная каёмка лейбла */
+                    #1a0a00 13.5%, #1a0a00 14.2%,
+                    /* Бороздки — чередование тёмных оттенков */
+                    #1c1c1c 14.2%, #1c1c1c 15%,
+                    #242424 15%, #242424 15.8%,
+                    #1a1a1a 15.8%, #1a1a1a 16.6%,
+                    #262626 16.6%, #262626 17.4%,
+                    #1b1b1b 17.4%, #1b1b1b 18.2%,
+                    #282828 18.2%, #282828 19%,
+                    #1a1a1a 19%, #1a1a1a 19.8%,
+                    #252525 19.8%, #252525 20.6%,
+                    #1c1c1c 20.6%, #1c1c1c 21.4%,
+                    #272727 21.4%, #272727 22.2%,
+                    #1a1a1a 22.2%, #1a1a1a 23%,
+                    #262626 23%, #262626 23.8%,
+                    #1c1c1c 23.8%, #1c1c1c 24.6%,
+                    #282828 24.6%, #282828 25.4%,
+                    #1b1b1b 25.4%, #1b1b1b 26.2%,
+                    #252525 26.2%, #252525 27%,
+                    #1a1a1a 27%, #1a1a1a 28%,
+                    #272727 28%, #272727 29%,
+                    #1c1c1c 29%, #1c1c1c 30%,
+                    #242424 30%, #242424 31.5%,
+                    #1a1a1a 31.5%, #1a1a1a 33%,
+                    #262626 33%, #262626 35%,
+                    #1b1b1b 35%, #1b1b1b 37%,
+                    #282828 37%, #282828 39.5%,
+                    #1a1a1a 39.5%, #1a1a1a 42%,
+                    #252525 42%, #252525 45%,
+                    #1c1c1c 45%, #1c1c1c 48.5%,
+                    #272727 48.5%, #272727 52%,
+                    #1a1a1a 52%, #1a1a1a 56%,
+                    #262626 56%, #262626 60.5%,
+                    #1b1b1b 60.5%, #1b1b1b 65%,
+                    #282828 65%, #282828 70%,
+                    #1a1a1a 70%, #1a1a1a 75.5%,
+                    #252525 75.5%, #252525 81%,
+                    #1c1c1c 81%, #1c1c1c 87%,
+                    #272727 87%, #272727 93%,
+                    #1e1e1e 93%, #1e1e1e 96%,
+                    #222 96%, #222 100%);
+            box-shadow:
+                inset 0 0 15px rgba(0, 0, 0, 0.7),
+                0 6px 20px rgba(0, 0, 0, 0.45),
+                0 1px 3px rgba(0, 0, 0, 0.5);
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            /* Блик на виниле */
+            position: absolute;
+        }
+        .vinyl-disc::after {
+            content: '';
+            position: absolute;
+            top: 8%;
+            left: 18%;
+            width: 35%;
+            height: 50%;
+            background: linear-gradient(160deg,
+                    rgba(255, 255, 255, 0.09) 0%,
+                    rgba(255, 255, 255, 0.03) 30%,
+                    transparent 55%,
+                    rgba(255, 255, 255, 0.02) 80%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: rotate(-15deg);
+        }
+        /* Лейбл по центру — декоративный текст */
+        .vinyl-disc::before {
+            content: 'VINYL\xa0\xa0VAULT';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(0deg);
+            font-family: var(--font-heading);
+            font-size: 0.55rem;
+            letter-spacing: 1.2px;
+            color: #fff;
+            text-align: center;
+            z-index: 2;
+            pointer-events: none;
+            white-space: nowrap;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+            opacity: 0.85;
+            line-height: 1.2;
+        }
+
+        /* ХОВЕР — диск выезжает и вращается */
+        .vinyl-card:hover .vinyl-disc {
+            transform: translate(calc(-50% + 48px), -50%) rotate(30deg);
+            animation: vinylSpinContinuous 2.2s linear infinite;
+            z-index: 4;
+            box-shadow:
+                inset 0 0 15px rgba(0, 0, 0, 0.7),
+                0 10px 30px rgba(0, 0, 0, 0.55),
+                0 2px 6px rgba(0, 0, 0, 0.5);
+        }
+        @keyframes vinylSpinContinuous {
+            from {
+                transform: translate(calc(-50% + 48px), -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(calc(-50% + 48px), -50%) rotate(360deg);
+            }
+        }
+
+        /* Информация о пластинке */
+        .card-info {
+            width: 100%;
+            z-index: 2;
+            position: relative;
+        }
+        .card-genre-badge {
+            display: inline-block;
+            font-family: var(--font-heading);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--cream-dark);
+            color: var(--brown);
+            margin-bottom: 8px;
+            border: 1px solid rgba(180, 140, 100, 0.3);
+        }
+        .card-artist {
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+            color: var(--brown-dark);
+            letter-spacing: 1px;
+            margin: 4px 0 2px;
+            line-height: 1.2;
+        }
+        .card-album {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--text-medium);
+            font-style: italic;
+            margin-bottom: 6px;
+            opacity: 0.85;
+        }
+        .card-price {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            color: var(--orange-dark);
+            letter-spacing: 1px;
+            margin: 6px 0 10px;
+            display: block;
+        }
+        .btn-add {
+            font-family: var(--font-heading);
+            font-size: 0.78rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 11px 22px;
+            background: var(--orange);
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all var(--transition);
+            box-shadow: 0 4px 10px rgba(224, 122, 50, 0.35);
+            width: 100%;
+            max-width: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-add:hover {
+            background: var(--orange-dark);
+            box-shadow: 0 6px 18px rgba(200, 100, 30, 0.5);
+            transform: translateY(-2px);
+            letter-spacing: 2px;
+        }
+        .btn-add:active {
+            transform: scale(0.93);
+            transition: 0.1s;
+            background: #b04d15;
+        }
+        .btn-add.in-cart {
+            background: var(--brown-light);
+            box-shadow: 0 4px 10px rgba(90, 50, 30, 0.3);
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        .btn-add.in-cart::after {
+            content: ' ✓';
+        }
+
+        /* ─────────────── КОРЗИНА (ASIDE) ─────────────── */
+        .cart-sidebar {
+            width: 320px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 140px;
+            align-self: flex-start;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 20px 18px 18px;
+            border: 2px solid rgba(180, 140, 100, 0.3);
+            max-height: 75vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 20;
+            transition: all var(--transition);
+        }
+        .cart-sidebar::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 20px;
+            right: 20px;
+            height: 3px;
+            background: var(--orange);
+            border-radius: 0 0 3px 3px;
+        }
+        .cart-header {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--brown-dark);
+            text-align: center;
+            padding-bottom: 14px;
+            border-bottom: 1px dashed rgba(180, 140, 100, 0.4);
+            margin-bottom: 10px;
+        }
+        .cart-header .cart-icon {
+            display: inline-block;
+            font-size: 1.5rem;
+            margin-right: 6px;
+            animation: subtleBounce 2s ease-in-out infinite;
+        }
+        @keyframes subtleBounce {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+        .cart-items-list {
+            list-style: none;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 380px;
+            padding-right: 4px;
+            margin: 0;
+            scroll-behavior: smooth;
+        }
+        .cart-items-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        .cart-items-list::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 10px;
+        }
+        .cart-items-list::-webkit-scrollbar-thumb {
+            background: var(--brown-light);
+            border-radius: 10px;
+            opacity: 0.5;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 8px;
+            border-bottom: 1px dotted rgba(180, 140, 100, 0.25);
+            gap: 8px;
+            transition: background 0.2s;
+            border-radius: 4px;
+        }
+        .cart-item:hover {
+            background: rgba(224, 122, 50, 0.06);
+        }
+        .cart-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .cart-item-name {
+            font-family: var(--font-heading);
+            font-size: 0.78rem;
+            letter-spacing: 0.5px;
+            color: var(--brown-dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cart-item-artist {
+            font-size: 0.7rem;
+            color: var(--text-medium);
+            font-style: italic;
+            opacity: 0.8;
+        }
+        .cart-item-price {
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            color: var(--orange-dark);
+            white-space: nowrap;
+            min-width: 50px;
+            text-align: right;
+        }
+        .btn-remove {
+            background: none;
+            border: 1.5px solid #c99;
+            color: #a44;
+            cursor: pointer;
+            font-size: 0.75rem;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            transition: all 0.25s;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            font-weight: 700;
+            padding: 0;
+        }
+        .btn-remove:hover {
+            background: #d44;
+            color: #fff;
+            border-color: #d44;
+            transform: scale(1.15);
+        }
+        .cart-empty {
+            text-align: center;
+            color: var(--text-medium);
+            font-style: italic;
+            padding: 30px 10px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        .cart-empty::before {
+            content: '🕳️';
+            display: block;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            opacity: 0.6;
+        }
+        .cart-summary {
+            border-top: 2px solid rgba(180, 140, 100, 0.35);
+            padding-top: 14px;
+            margin-top: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+        .cart-total-label {
+            color: var(--brown);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+        .cart-total-amount {
+            color: var(--orange-dark);
+            font-size: 1.35rem;
+            letter-spacing: 2px;
+        }
+        .btn-clear-cart {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 9px;
+            font-family: var(--font-body);
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: transparent;
+            border: 1.5px solid rgba(180, 140, 100, 0.4);
+            color: var(--text-medium);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+        .btn-clear-cart:hover {
+            background: #f5e6d0;
+            border-color: #c99;
+            color: #933;
+        }
+
+        /* ─────────────── МОБИЛЬНАЯ КОРЗИНА ─────────────── */
+        .mobile-cart-toggle {
+            display: none;
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            z-index: 200;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--orange);
+            color: #fff;
+            border: none;
+            font-size: 1.6rem;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(224, 122, 50, 0.55);
+            transition: all var(--transition);
+            align-items: center;
+            justify-content: center;
+        }
+        .mobile-cart-toggle .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #c0392b;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-body);
+            border: 2px solid #fff;
+        }
+        .mobile-cart-toggle:active {
+            transform: scale(0.9);
+        }
+
+        /* ─────────────── ФУТЕР ─────────────── */
+        .site-footer {
+            text-align: center;
+            padding: 18px;
+            background: var(--brown-dark);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            font-family: var(--font-body);
+            border-top: 2px solid var(--orange);
+        }
+        .site-footer span {
+            color: var(--mustard-light);
+            font-family: var(--font-heading);
+            letter-spacing: 1px;
+        }
+
+        /* ─────────────── АДАПТИВ ─────────────── */
+        @media (max-width: 900px) {
+            .app-container {
+                flex-direction: column;
+                padding: 12px 10px 100px;
+                gap: 16px;
+            }
+            .cart-sidebar {
+                display: none;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto;
+                width: 100%;
+                max-height: 55vh;
+                z-index: 150;
+                border-radius: 20px 20px 0 0;
+                padding: 16px 14px 14px;
+                box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4);
+                border: none;
+                border-top: 4px solid var(--orange);
+                animation: slideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+            .cart-sidebar.open {
+                display: flex;
+            }
+            @keyframes slideUp {
+                from {
+                    transform: translateY(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+            .cart-sidebar::before {
+                display: none;
+            }
+            .cart-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 145;
+            }
+            .cart-overlay.open {
+                display: block;
+            }
+            .mobile-cart-toggle {
+                display: flex;
+            }
+            .cart-items-list {
+                max-height: 200px;
+            }
+            .site-header {
+                padding: 14px 12px 16px;
+            }
+            .site-title {
+                font-size: 1.8rem;
+                letter-spacing: 2px;
+            }
+            .site-subtitle {
+                font-size: 0.7rem;
+                letter-spacing: 2px;
+            }
+            .logo-icon {
+                font-size: 2rem;
+            }
+            .filter-bar {
+                gap: 6px;
+                justify-content: center;
+            }
+            .filter-btn {
+                padding: 8px 14px;
+                font-size: 0.7rem;
+                letter-spacing: 1px;
+            }
+            .card-media {
+                width: 180px;
+                height: 180px;
+            }
+            .vinyl-disc {
+                width: 164px;
+                height: 164px;
+            }
+            .vinyl-card:hover .vinyl-disc {
+                transform: translate(calc(-50% + 38px), -50%) rotate(30deg);
+                animation: vinylSpinContinuousMobile 2.2s linear infinite;
+            }
+            @keyframes vinylSpinContinuousMobile {
+                from {
+                    transform: translate(calc(-50% + 38px), -50%) rotate(0deg);
+                }
+                to {
+                    transform: translate(calc(-50% + 38px), -50%) rotate(360deg);
+                }
+            }
+            .btn-add {
+                max-width: 160px;
+                padding: 10px 16px;
+                font-size: 0.7rem;
+            }
+            .card-artist {
+                font-size: 0.9rem;
+            }
+            .card-price {
+                font-size: 1.1rem;
+            }
+        }
+        @media (max-width: 400px) {
+            .card-media {
+                width: 150px;
+                height: 150px;
+            }
+            .vinyl-disc {
+                width: 136px;
+                height: 136px;
+            }
+            .vinyl-card:hover .vinyl-disc {
+                transform: translate(calc(-50% + 30px), -50%) rotate(30deg);
+                animation: vinylSpinContinuousSmall 2.2s linear infinite;
+            }
+            @keyframes vinylSpinContinuousSmall {
+                from {
+                    transform: translate(calc(-50% + 30px), -50%) rotate(0deg);
+                }
+                to {
+                    transform: translate(calc(-50% + 30px), -50%) rotate(360deg);
+                }
+            }
+            .vinyl-grid {
+                gap: 20px;
+            }
+            .filter-btn {
+                padding: 7px 11px;
+                font-size: 0.65rem;
+            }
+        }
+
+        /* ─────────────── ВСПОМОГАТЕЛЬНЫЕ ─────────────── */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════ ХЕДЕР ═══════════ -->
+    <header class="site-header">
+        <div class="header-inner">
+            <span class="logo-icon" aria-hidden="true">💿</span>
+            <h1 class="site-title">Vinyl Vault</h1>
+            <p class="site-subtitle">Ретро-футуризм · Виниловый рай 70-х</p>
+        </div>
+    </header>
+
+    <!-- ═══════════ ОСНОВНОЙ КОНТЕЙНЕР ═══════════ -->
+    <div class="app-container">
+
+        <!-- Основной контент -->
+        <main class="main-content" id="mainContent">
+
+            <!-- Фильтры -->
+            <nav class="filter-bar" aria-label="Фильтр по жанрам">
+                <span class="filter-label">Жанр:</span>
+                <button class="filter-btn active" data-filter="all">Все</button>
+                <button class="filter-btn" data-filter="jazz">Jazz</button>
+                <button class="filter-btn" data-filter="funk">Funk</button>
+                <button class="filter-btn" data-filter="soul">Soul</button>
+            </nav>
+
+            <!-- Сетка пластинок -->
+            <div class="vinyl-grid" id="vinylGrid">
+                <!-- Карточки генерируются JS -->
+            </div>
+        </main>
+
+        <!-- Корзина (десктоп) -->
+        <aside class="cart-sidebar" id="cartSidebar" aria-label="Корзина">
+            <h2 class="cart-header">
+                <span class="cart-icon" aria-hidden="true">🛒</span>Коллекция
+            </h2>
+            <ul class="cart-items-list" id="cartItemsList">
+                <li class="cart-empty">Ваша коллекция пуста<br>Добавьте винил!</li>
+            </ul>
+            <div class="cart-summary">
+                <span class="cart-total-label">Итого:</span>
+                <span class="cart-total-amount" id="cartTotal">$0</span>
+            </div>
+            <button class="btn-clear-cart" id="btnClearCart" title="Очистить корзину">Очистить</button>
+        </aside>
+    </div>
+
+    <!-- Оверлей для мобильной корзины -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <!-- Кнопка открытия корзины на мобильных -->
+    <button class="mobile-cart-toggle" id="mobileCartToggle" aria-label="Открыть корзину">
+        🛒
+        <span class="badge" id="cartBadge" style="display:none;">0</span>
+    </button>
+
+    <!-- ═══════════ ФУТЕР ═══════════ -->
+    <footer class="site-footer">
+        © 1974 · <span>Vinyl Vault</span> · Ретро-футуризм навсегда · Все права защищены
+    </footer>
+
+    <script>
+        (function() {
+            // ─────────── ДАННЫЕ ПЛАСТИНОК ───────────
+            const vinylRecords = [{
+                id: 'v1',
+                artist: 'Miles Davis',
+                album: 'Kind of Blue',
+                genre: 'jazz',
+                price: 25,
+                coverSeed: 'kindofblue',
+                coverAlt: 'Обложка альбома Kind of Blue — Miles Davis'
+            }, {
+                id: 'v2',
+                artist: 'John Coltrane',
+                album: 'A Love Supreme',
+                genre: 'jazz',
+                price: 28,
+                coverSeed: 'alovesupreme',
+                coverAlt: 'Обложка альбома A Love Supreme — John Coltrane'
+            }, {
+                id: 'v3',
+                artist: 'James Brown',
+                album: 'The Payback',
+                genre: 'funk',
+                price: 22,
+                coverSeed: 'thepayback',
+                coverAlt: 'Обложка альбома The Payback — James Brown'
+            }, {
+                id: 'v4',
+                artist: 'Parliament',
+                album: 'Mothership Connection',
+                genre: 'funk',
+                price: 24,
+                coverSeed: 'mothership',
+                coverAlt: 'Обложка альбома Mothership Connection — Parliament'
+            }, {
+                id: 'v5',
+                artist: 'Marvin Gaye',
+                album: "What's Going On",
+                genre: 'soul',
+                price: 26,
+                coverSeed: 'whatsgoingon',
+                coverAlt: "Обложка альбома What's Going On — Marvin Gaye"
+            }, {
+                id: 'v6',
+                artist: 'Aretha Franklin',
+                album: 'Lady Soul',
+                genre: 'soul',
+                price: 23,
+                coverSeed: 'ladysoul',
+                coverAlt: 'Обложка альбома Lady Soul — Aretha Franklin'
+            }];
+
+            // ─────────── DOM-ЭЛЕМЕНТЫ ───────────
+            const vinylGrid = document.getElementById('vinylGrid');
+            const cartItemsList = document.getElementById('cartItemsList');
+            const cartTotal = document.getElementById('cartTotal');
+            const btnClearCart = document.getElementById('btnClearCart');
+            const cartSidebar = document.getElementById('cartSidebar');
+            const cartOverlay = document.getElementById('cartOverlay');
+            const mobileCartToggle = document.getElementById('mobileCartToggle');
+            const cartBadge = document.getElementById('cartBadge');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+
+            // ─────────── СОСТОЯНИЕ ───────────
+            let cart = []; // { id, artist, album, price }
+            let currentFilter = 'all';
+
+            // ─────────── localStorage ───────────
+            const STORAGE_KEY = 'vinylVaultCart';
+
+            function loadCartFromStorage() {
+                try {
+                    const stored = localStorage.getItem(STORAGE_KEY);
+                    if (stored) {
+                        const parsed = JSON.parse(stored);
+                        if (Array.isArray(parsed)) {
+                            cart = parsed.filter(item =>
+                                item && item.id && typeof item.price === 'number'
+                            );
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Не удалось загрузить корзину из localStorage:', e);
+                    cart = [];
+                }
+            }
+
+            function saveCartToStorage() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+                } catch (e) {
+                    console.warn('Не удалось сохранить корзину в localStorage:', e);
+                }
+            }
+
+            // ─────────── ОТРИСОВКА КАРТОЧЕК ───────────
+            function renderVinylCards() {
+                vinylGrid.innerHTML = '';
+                vinylRecords.forEach(record => {
+                    const card = document.createElement('article');
+                    card.className = 'vinyl-card';
+                    card.setAttribute('data-genre', record.genre);
+                    card.setAttribute('data-id', record.id);
+                    if (currentFilter !== 'all' && record.genre !== currentFilter) {
+                        card.classList.add('hidden-by-filter');
+                    }
+
+                    // Проверяем, есть ли уже в корзине
+                    const inCart = cart.some(item => item.id === record.id);
+
+                    card.innerHTML = `
+                        <div class="card-media">
+                            <!-- Виниловый диск (позади обложки) -->
+                            <div class="vinyl-disc" aria-hidden="true"></div>
+                            <!-- Обложка -->
+                            <div class="cover-wrapper">
+                                <img
+                                    src="https://picsum.photos/seed/${record.coverSeed}/300/300"
+                                    alt="${record.coverAlt}"
+                                    loading="lazy"
+                                    width="300"
+                                    height="300"
+                                >
+                            </div>
+                        </div>
+                        <div class="card-info">
+                            <span class="card-genre-badge">${record.genre}</span>
+                            <h3 class="card-artist">${record.artist}</h3>
+                            <p class="card-album">${record.album}</p>
+                            <span class="card-price">$${record.price}</span>
+                            <button
+                                class="btn-add${inCart ? ' in-cart' : ''}"
+                                data-id="${record.id}"
+                                ${inCart ? 'disabled' : ''}
+                            >
+                                ${inCart ? 'В коллекции' : 'Добавить в коллекцию'}
+                            </button>
+                        </div>
+                    `;
+                    vinylGrid.appendChild(card);
+                });
+
+                // Навешиваем обработчики на кнопки «Добавить»
+                document.querySelectorAll('.btn-add:not(.in-cart)').forEach(btn => {
+                    btn.addEventListener('click', handleAddToCart);
+                });
+            }
+
+            // ─────────── ДОБАВЛЕНИЕ В КОРЗИНУ ───────────
+            function handleAddToCart(e) {
+                const btn = e.currentTarget;
+                const recordId = btn.getAttribute('data-id');
+                const record = vinylRecords.find(r => r.id === recordId);
+                if (!record) return;
+
+                // Проверка на дубликат
+                if (cart.some(item => item.id === recordId)) return;
+
+                cart.push({
+                    id: record.id,
+                    artist: record.artist,
+                    album: record.album,
+                    price: record.price
+                });
+                saveCartToStorage();
+                updateCartUI();
+                updateAllAddButtons();
+
+                // Анимация кнопки
+                btn.classList.add('in-cart');
+                btn.textContent = 'В коллекции';
+                btn.disabled = true;
+
+                // Пульс на значке корзины
+                pulseCartIcon();
+            }
+
+            function updateAllAddButtons() {
+                document.querySelectorAll('.btn-add').forEach(btn => {
+                    const rid = btn.getAttribute('data-id');
+                    const inCart = cart.some(item => item.id === rid);
+                    if (inCart) {
+                        btn.classList.add('in-cart');
+                        btn.textContent = 'В коллекции';
+                        btn.disabled = true;
+                    } else {
+                        btn.classList.remove('in-cart');
+                        btn.textContent = 'Добавить в коллекцию';
+                        btn.disabled = false;
+                        // Убедимся что обработчик есть
+                        btn.removeEventListener('click', handleAddToCart);
+                        btn.addEventListener('click', handleAddToCart);
+                    }
+                });
+            }
+
+            function pulseCartIcon() {
+                mobileCartToggle.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    mobileCartToggle.style.transform = 'scale(1)';
+                }, 200);
+            }
+
+            // ─────────── УДАЛЕНИЕ ИЗ КОРЗИНЫ ───────────
+            function handleRemoveFromCart(e) {
+                const btn = e.currentTarget;
+                const recordId = btn.getAttribute('data-id');
+                cart = cart.filter(item => item.id !== recordId);
+                saveCartToStorage();
+                updateCartUI();
+                updateAllAddButtons();
+            }
+
+            // ─────────── ОБНОВЛЕНИЕ UI КОРЗИНЫ ───────────
+            function updateCartUI() {
+                // Список
+                if (cart.length === 0) {
+                    cartItemsList.innerHTML = '<li class="cart-empty">Ваша коллекция пуста<br>Добавьте винил!</li>';
+                } else {
+                    cartItemsList.innerHTML = '';
+                    cart.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'cart-item';
+                        li.innerHTML = `
+                            <div class="cart-item-info">
+                                <div class="cart-item-name">${item.album}</div>
+                                <div class="cart-item-artist">${item.artist}</div>
+                            </div>
+                            <span class="cart-item-price">$${item.price}</span>
+                            <button class="btn-remove" data-id="${item.id}" title="Удалить" aria-label="Удалить ${item.album}">✕</button>
+                        `;
+                        cartItemsList.appendChild(li);
+                    });
+
+                    // Обработчики удаления
+                    cartItemsList.querySelectorAll('.btn-remove').forEach(btn => {
+                        btn.addEventListener('click', handleRemoveFromCart);
+                    });
+                }
+
+                // Сумма
+                const total = cart.reduce((sum, item) => sum + item.price, 0);
+                cartTotal.textContent = '$' + total;
+
+                // Бейдж на мобильной кнопке
+                if (cart.length > 0) {
+                    cartBadge.textContent = cart.length;
+                    cartBadge.style.display = 'flex';
+                } else {
+                    cartBadge.style.display = 'none';
+                }
+
+                // Кнопка очистки
+                btnClearCart.style.display = cart.length > 0 ? 'block' : 'none';
+            }
+
+            // ─────────── ОЧИСТКА КОРЗИНЫ ───────────
+            function handleClearCart() {
+                if (cart.length === 0) return;
+                if (confirm('Очистить всю коллекцию? Пластинки вернутся на полку.')) {
+                    cart = [];
+                    saveCartToStorage();
+                    updateCartUI();
+                    updateAllAddButtons();
+                }
+            }
+
+            // ─────────── ФИЛЬТРАЦИЯ ───────────
+            function handleFilterClick(e) {
+                const btn = e.currentTarget;
+                const filterValue = btn.getAttribute('data-filter');
+
+                // Обновляем активную кнопку
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Применяем фильтр
+                currentFilter = filterValue;
+                const allCards = vinylGrid.querySelectorAll('.vinyl-card');
+                allCards.forEach(card => {
+                    const genre = card.getAttribute('data-genre');
+                    if (filterValue === 'all' || genre === filterValue) {
+                        card.classList.remove('hidden-by-filter');
+                    } else {
+                        card.classList.add('hidden-by-filter');
+                    }
+                });
+            }
+
+            // ─────────── МОБИЛЬНАЯ КОРЗИНА ───────────
+            function openMobileCart() {
+                cartSidebar.classList.add('open');
+                cartOverlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                mobileCartToggle.style.display = 'none';
+            }
+
+            function closeMobileCart() {
+                cartSidebar.classList.remove('open');
+                cartOverlay.classList.remove('open');
+                document.body.style.overflow = '';
+                mobileCartToggle.style.display = 'flex';
+            }
+
+            function isMobileView() {
+                return window.innerWidth <= 900;
+            }
+
+            // ─────────── ИНИЦИАЛИЗАЦИЯ ───────────
+            function init() {
+                loadCartFromStorage();
+                renderVinylCards();
+                updateCartUI();
+                updateAllAddButtons();
+
+                // Обработчики фильтров
+                filterBtns.forEach(btn => {
+                    btn.addEventListener('click', handleFilterClick);
+                });
+
+                // Очистка корзины
+                btnClearCart.addEventListener('click', handleClearCart);
+
+                // Мобильная корзина
+                mobileCartToggle.addEventListener('click', openMobileCart);
+                cartOverlay.addEventListener('click', closeMobileCart);
+
+                // Закрытие мобильной корзины по свайпу вниз (упрощённо — клик на оверлей)
+                // Также закрываем при изменении размера окна если стали десктопом
+                window.addEventListener('resize', () => {
+                    if (!isMobileView()) {
+                        closeMobileCart();
+                    }
+                });
+
+                // Изначальное состояние мобильной кнопки
+                if (isMobileView()) {
+                    mobileCartToggle.style.display = 'flex';
+                    cartSidebar.classList.remove('open');
+                    cartOverlay.classList.remove('open');
+                } else {
+                    mobileCartToggle.style.display = 'none';
+                    cartSidebar.classList.remove('open');
+                    cartOverlay.classList.remove('open');
+                    document.body.style.overflow = '';
+                }
+
+                // Обработчик Escape для закрытия мобильной корзины
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && cartSidebar.classList.contains('open')) {
+                        closeMobileCart();
+                    }
+                });
+
+                console.log('🎵 Vinyl Vault готов! Добро пожаловать в ретро-футуристический мир винила.');
+                console.log('📀 Пластинок в каталоге:', vinylRecords.length);
+                console.log('🛒 Товаров в корзине:', cart.length);
+            }
+
+            // ─────────── ЗАПУСК ───────────
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+        })();
+    </script>
+</body>
+</html>

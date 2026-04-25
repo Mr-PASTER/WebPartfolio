@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOUX — премиальный каталог</title>
+    <style>
+        :root {
+            --bg: #FAF7F3;
+            --card-bg: #FFFFFF;
+            --text: #3D3835;
+            --text-secondary: #8A827C;
+            --text-muted: #B5AFA8;
+            --accent-rose: #D4B5B0;
+            --accent-sage: #B8C8B8;
+            --accent-lavender: #C8C0D8;
+            --accent-warm: #E8DFD5;
+            --accent-peach: #E8D5CC;
+            --accent-sky: #C8D4DD;
+            --accent-cream: #F2EDE6;
+            --accent-sand: #E5DCD0;
+            --shadow-sm: 0 1px 12px rgba(60, 40, 30, 0.04);
+            --shadow-md: 0 4px 24px rgba(60, 40, 30, 0.06);
+            --shadow-lg: 0 12px 40px rgba(60, 40, 30, 0.10);
+            --radius-sm: 16px;
+            --radius-md: 22px;
+            --radius-lg: 28px;
+            --transition: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            letter-spacing: -0.01em;
+        }
+
+        /* ── Announcement bar ─────────────── */
+        .announcement {
+            background: linear-gradient(135deg, #F3EBE6 0%, #EDE4DB 40%, #F0E8E2 100%);
+            text-align: center;
+            padding: 10px 20px;
+            font-size: 0.82rem;
+            letter-spacing: 0.04em;
+            color: #6B5E56;
+            font-weight: 500;
+            position: relative;
+            z-index: 10;
+        }
+        .announcement span {
+            opacity: 0.75;
+            font-weight: 400;
+            margin: 0 4px;
+        }
+
+        /* ── Header ──────────────────────── */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(250, 247, 243, 0.82);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            padding: 18px 0;
+            transition: var(--transition);
+        }
+        .header-inner {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand {
+            font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
+            font-size: 1.9rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            color: #3D3835;
+            text-decoration: none;
+            line-height: 1;
+        }
+        .brand span {
+            color: #B8958A;
+            font-weight: 400;
+        }
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+            align-items: center;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #6B5E56;
+            font-size: 0.9rem;
+            font-weight: 450;
+            letter-spacing: 0.02em;
+            transition: color 0.3s;
+            position: relative;
+        }
+        .nav-links a:hover {
+            color: #3D3835;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: #C8B0A8;
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* ── Hero ────────────────────────── */
+        .hero {
+            padding: 64px 32px 40px;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .hero-tag {
+            display: inline-block;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #9B8A80;
+            background: #F3EEE9;
+            padding: 8px 20px;
+            border-radius: 50px;
+            margin-bottom: 22px;
+            font-weight: 500;
+        }
+        .hero h2 {
+            font-family: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
+            font-size: 2.8rem;
+            font-weight: 450;
+            letter-spacing: 0.02em;
+            color: #3D3835;
+            line-height: 1.2;
+            margin-bottom: 14px;
+        }
+        .hero p {
+            font-size: 1.05rem;
+            color: #8A827C;
+            max-width: 480px;
+            margin: 0 auto;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+            line-height: 1.5;
+        }
+
+        /* ── Catalog grid ────────────────── */
+        .catalog-section {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 10px 32px 60px;
+        }
+        .section-label {
+            font-size: 0.76rem;
+            letter-spacing: 0.09em;
+            text-transform: uppercase;
+            color: #A89B91;
+            margin-bottom: 28px;
+            font-weight: 500;
+            text-align: center;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        .product-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            /* НИКАКИХ border! Только тень */
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .product-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+        .product-card:focus-visible {
+            box-shadow: 0 0 0 3px rgba(200, 180, 160, 0.45), var(--shadow-md);
+            outline: none;
+        }
+        .card-image {
+            height: 240px;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .card-image-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Абстрактные фигуры для каждого товара */
+        .card-image .abstract-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.55;
+            transition: var(--transition);
+        }
+        .product-card:hover .abstract-shape {
+            opacity: 0.7;
+            transform: scale(1.06);
+        }
+        .card-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            font-size: 0.7rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            font-weight: 600;
+            padding: 5px 13px;
+            border-radius: 50px;
+            z-index: 3;
+            background: #F5F0EB;
+            color: #8B7A6E;
+            /* без обводки */
+        }
+        .card-badge.new {
+            background: #EDE4DD;
+            color: #7A6558;
+        }
+        .card-badge.bestseller {
+            background: #E8E0D8;
+            color: #6B5A4E;
+        }
+        .card-body {
+            padding: 18px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex-grow: 1;
+        }
+        .card-category {
+            font-size: 0.7rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: #B5AFA8;
+            font-weight: 500;
+        }
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 550;
+            color: #3D3835;
+            letter-spacing: 0.01em;
+            line-height: 1.3;
+        }
+        .card-desc {
+            font-size: 0.82rem;
+            color: #9B938B;
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+        .card-price {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #4A3F38;
+            letter-spacing: 0.02em;
+            margin-top: 4px;
+        }
+        .card-price .currency {
+            font-weight: 450;
+            font-size: 0.85rem;
+            color: #9B938B;
+            margin-left: 2px;
+        }
+
+        /* ── Footer ──────────────────────── */
+        .footer {
+            text-align: center;
+            padding: 40px 32px 36px;
+            color: #B5AFA8;
+            font-size: 0.82rem;
+            letter-spacing: 0.03em;
+            border-top: none;
+            /* без обводки — используем мягкий градиент для разделения */
+            background: linear-gradient(to bottom, transparent 0%, #F5F0EB 60%);
+        }
+        .footer a {
+            color: #8A7C72;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer a:hover {
+            color: #3D3835;
+        }
+        .footer-divider {
+            width: 50px;
+            height: 2px;
+            background: #E5DDD4;
+            border-radius: 2px;
+            margin: 0 auto 20px;
+            opacity: 0.7;
+        }
+
+        /* ── Responsive ──────────────────── */
+        @media (max-width: 1024px) {
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 18px;
+            }
+        }
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
+            }
+            .hero h2 {
+                font-size: 2.1rem;
+            }
+            .hero {
+                padding: 40px 20px 28px;
+            }
+            .header-inner {
+                padding: 0 18px;
+            }
+            .catalog-section {
+                padding: 8px 18px 40px;
+            }
+            .card-image {
+                height: 180px;
+            }
+            .card-body {
+                padding: 14px 15px 16px;
+            }
+            .card-title {
+                font-size: 0.92rem;
+            }
+            .card-price {
+                font-size: 1.1rem;
+            }
+            .brand {
+                font-size: 1.5rem;
+            }
+            .nav-links {
+                gap: 20px;
+            }
+            .nav-links a {
+                font-size: 0.8rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .product-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .card-image {
+                height: 150px;
+            }
+            .card-body {
+                padding: 10px 12px 14px;
+            }
+            .card-title {
+                font-size: 0.82rem;
+            }
+            .card-price {
+                font-size: 0.98rem;
+            }
+            .card-desc {
+                font-size: 0.7rem;
+            }
+            .hero h2 {
+                font-size: 1.7rem;
+            }
+            .hero p {
+                font-size: 0.9rem;
+            }
+            .nav-links {
+                gap: 14px;
+            }
+            .brand {
+                font-size: 1.3rem;
+            }
+            .header-inner {
+                padding: 0 12px;
+            }
+            .catalog-section {
+                padding: 4px 10px 30px;
+            }
+            .announcement {
+                font-size: 0.7rem;
+                padding: 8px 12px;
+            }
+        }
+
+        /* ── Кнопка "наверх" (без обводки) ── */
+        .scroll-top {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 200;
+            transition: var(--transition);
+            font-size: 1.2rem;
+            color: #8A7C72;
+            text-decoration: none;
+            /* без обводки */
+            outline: none;
+            border: none;
+        }
+        .scroll-top:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+            color: #4A3F38;
+        }
+    </style>
+    <!-- Элегантный шрифт для бренда -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@350;400;450;500;550;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ── Тонкая полоса с объявлением ── -->
+    <div class="announcement">
+        Новая коллекция уже в каталоге <span>·</span> Бесплатная доставка при заказе от 6 000 ₽
+    </div>
+
+    <!-- ── Шапка ── -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="#" class="brand">DOUX<span>.</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#catalog">Каталог</a></li>
+                    <li><a href="#about">О бренде</a></li>
+                    <li><a href="#contacts">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ── Hero-блок ── -->
+    <section class="hero" id="about">
+        <div class="hero-tag">Весна 2026</div>
+        <h2>Тихая роскошь<br>в пастельных тонах</h2>
+        <p>Предметы интерьера, которые дышат спокойствием. Никакой кричащей графики — только мягкие линии, натуральные оттенки и безупречное качество.</p>
+    </section>
+
+    <!-- ── Каталог товаров ── -->
+    <section class="catalog-section" id="catalog">
+        <p class="section-label">Избранные товары</p>
+        <div class="product-grid">
+
+            <!-- Карточка 1: Льняной плед -->
+            <article class="product-card" tabindex="0" aria-label="Льняной плед ручной работы">
+                <div class="card-image">
+                    <div class="card-image-inner" style="background: linear-gradient(145deg, #F1E4DE 0%, #EAD9D1 30%, #F5EDE8 70%, #E8D5CC 100%);">
+                        <div class="abstract-shape" style="width:100px;height:100px;background:rgba(210,175,160,0.5);top:18%;left:22%;border-radius:60% 40% 55% 45%;"></div>
+                        <div class="abstract-shape" style="width:70px;height:70px;background:rgba(195,155,140,0.4);bottom:20%;right:18%;border-radius:45% 55% 50% 50%;"></div>
+                        <div class="abstract-shape" style="width:50px;height:50px;background:rgba(220,195,180,0.5);top:40%;right:30%;border-radius:50% 50% 50% 50%;"></div>
+                    </div>
+                    <span class="card-badge bestseller">Хит</span>
+                </div>
+                <div class="card-body">
+                    <span class="card-category">Текстиль</span>
+                    <h3 class="card-title">Льняной плед ручной работы</h3>
+                    <p class="card-desc">100% европейский лён, нежнейшая фактура, дышащий материал.</p>
+                    <p class="card-price">5 800 <span class="currency">₽</span></p>
+                </div>
+            </article>
+
+            <!-- Карточка 2: Соевая свеча -->
+            <article class="product-card" tabindex="0" aria-label="Соевая свеча в стекле">
+                <div class="card-image">
+                    <div class="card-image-inner" style="background: linear-gradient(160deg, #F5EEE6 0%, #EDE0D2 35%, #F8F2EB 65%, #E8D9C5 100%);">
+                        <div class="abstract-shape" style="width:45px;height:75px;background:rgba(215,190,160,0.5);top:28%;left:38%;border-radius:40% 40% 35% 35%;"></div>
+                        <div class="abstract-shape" style="width:85px;height:85px;background:rgba(230,210,180,0.35);top:15%;right:20%;border-radius:55% 45% 50% 50%;"></div>
+                        <div class="abstract-shape" style="width:30px;height:30px;background:rgba(245,220,190,0.55);top:55%;left:25%;border-radius:50%;"></div>
+                    </div>
+                    <span class="card-badge new">New</span>
+                </div>
+                <div class="card-body">
+                    <span class="card-category">Ароматы для дома</span>
+                    <h3 class="card-title">Соевая свеча в стекле</h3>
+                    <p class="card-desc">Натуральный соевый воск, хлопковый фитиль, тонкий шлейф сандала и ванили.</p>
+                    <p class="card-price">2 450 <span class="currency">₽</span></p>
+                </div>
+            </article>
+
+            <!-- Карточка 3: Керамическая ваза -->
+            <article class="product-card" tabindex="0" aria-label="Керамическая ваза Волна">
+                <div class="card-image">
+                    <div class="card-image-inner" style="background: linear-gradient(150deg, #EAF0E8 0%, #D8E4D4 30%, #EDF4EA 65%, #C8DBC2 100%);">
+                        <div class="abstract-shape" style="width:55px;height:95px;background:rgba(170,200,165,0.5);top:20%;left:30%;border-radius:35% 35% 45% 45%;"></div>
+                        <div class="abstract-shape" style="width:80px;height:60px;background:rgba(185,210,175,0.4);bottom:18%;right:22%;border-radius:50% 50% 40% 40%;"></div>
+                        <div class="abstract-shape" style="width:40px;height:40px;background:rgba(160,195,155,0.45);top:45%;right:35%;border-radius:50%;"></div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="card-category">Декор</span>
+                    <h3 class="card-title">Керамическая ваза &laquo;Волна&raquo;</h3>
+                    <p class="card-desc">Ручная лепка, матовая глазурь, плавный силуэт в японском стиле.</p>
+                    <p class="card-price">3 200 <span class="currency">₽</span></p>
+                </div>
+            </article>
+
+            <!-- Карточка 4: Декоративная подушка -->
+            <article class="product-card" tabindex="0" aria-label="Декоративная подушка">
+                <div class="card-image">
+                    <div class="card-image-inner" style="background: linear-gradient(140deg, #EEE9F2 0%, #DDD5E6 30%, #F0ECF5 65%, #D5CAE2 100%);">
+                        <div class="abstract-shape" style="width:90px;height:70px;background:rgba(195,180,210,0.45);top:25%;left:18%;border-radius:55% 45% 50% 50%;"></div>
+                        <div class="abstract-shape" style="width:55px;height:55px;background:rgba(180,165,200,0.5);bottom:22%;right:20%;border-radius:48% 52% 45% 55%;"></div>
+                    </div>
+                    <span class="card-badge bestseller">Хит</span>
+                </div>
+                <div class="card-body">
+                    <span class="card-category">Текстиль</span>
+                    <h3 class="card-title">Подушка декоративная</h3>
+                    <p class="card-desc">Бархатистый велюр, наполнитель из микроволокна, скрытая молния.</p>
+                    <p class="card-price">1 890 <span class="currency">₽</span></p>
+                </div>
+            </article>
+
+            <!-- Карточка 5: Настольная лампа -->
+            <article class="product-card" tabindex="0" aria-label="Настольная лампа">
+                <div class="card-image">
+                    <div class="card-image-inner" style="background: linear-gradient(155deg, #F6F2EC 0%, #EDE4D6 30%, #F9F5EF 70%, #E5D9C5 100%);">
+                        <div class="abstract-shape" style="width:40px;height:90px;background:rgba(210,190,165,0.5);top:18%;left:40%;border-radius:30% 30% 30% 30%;"></div>
+                        <div class="abstract-shape" style="width:100px;height:60px;background:rgba(225,200,175,0.35);bottom:15%;right:15%;border-radius:50% 50% 50% 50%;"></div>
+                        <div class="abstract-shape" style="width:35px;height:35px;background:rgba(240,215,185,0.5);top:50%;right:30%;border-radius:50%;"></div>
+                    </div>
+                    <span class="card-badge new">New</span>
+                </div>
+                <div class="card-body">
+                    <span class="card-category">Освещение</span>
+                    <h3 class="card-title">Лампа настольная</h3>
+                    <p class="card-desc">Металл с матовым покрытием, регулируемый угол, тёплый свет 2700K.</p>
+                    <p class="card-price">7 400 <span class="currency">₽</span></p>
+                </div>
+            </article>
+
+            <!-- Карточка 6: Чайный набор -->
+            <article class="product-card" tabindex="0" aria-label="Чайный набор ручной работы">
+                <div class="card-image">
+                    <div class="card-image-inner" style="background: linear-gradient(148deg, #F5EFE8 0%, #EDE0D2 35%, #F7F1EA 68%, #E5D3BF 100%);">
+                        <div class="abstract-shape" style="width:65px;height:45px;background:rgba(205,180,155,0.5);top:30%;left:25%;border-radius:50% 50% 40% 40%;"></div>
+                        <div class="abstract-shape" style="width:50px;height:65px;background:rgba(190,165,140,0.4);bottom:20%;right:25%;border-radius:38% 38% 42% 42%;"></div>
+                        <div class="abstract-shape" style="width:28px;height:28px;background:rgba(220,190,160,0.5);top:50%;left:45%;border-radius:50%;"></div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <span class="card-category">Посуда</span>
+                    <h3 class="card-title">Чайный набор ручной работы</h3>
+                    <p class="card-desc">Керамика, обожжённая в печи, 4 чашки + заварочный чайник, глазурь без свинца.</p>
+                    <p class="card-price">4 150 <span class="currency">₽</span></p>
+                </div>
+            </article>
+
+            <!-- Карточка 7: Плетёная корзина -->
+            <article class="product-card" tabindex="0" aria-label="Плетёная корзина">
+                <div class="card-image">
+                    <div class="card-image-inner" style="background: linear-gradient(152deg, #F3EDE4 0%, #E8DCCB 30%, #F5EFE6 68%, #DDCFB8 100%);">
+                        <div class="abstract-shape" style="width:80px;height:70px;background:rgba(195,170,140,0.45);top:22%;left:20%;border-radius:50% 50% 45% 45%;"></div>
+                        <div class="abstract-shape" style="width:55px;height:55px;background:rgba(180,155,125,0.5);bottom:20%;right:22%;border-radius:48% 52% 50% 50%;"></div>
+                    </div>
+                    <span class="card-badge bestseller">Хит</span>
+                </div>
+                <div class="card-body">
+                    <span class="card-category">Хранение</span>
+                    <h3 class="card-title">Корзина плетёная</h3>
+                    <p class="card-desc">Натуральный ротанг, ручное плетение, идеально для пледа или журналов.</p>
+                    <p class="card-price">2 780 <span class="currency">₽</span></p>
+                </div>
+            </article>
+
+            <!-- Карточка 8: Постер минимализм -->
+            <article class="product-card" tabindex="0" aria-label="Постер в рамке">
+                <div class="card-image">
+                    <div class="card-image-inner" style="background: linear-gradient(145deg, #ECF0F4 0%, #D8E0E8 30%, #F0F4F7 65%, #CBD6E0 100%);">
+                        <div class="abstract-shape" style="width:70px;height:90px;background:rgba(180,195,210,0.45);top:18%;left:28%;border-radius:8% 8% 8% 8%;"></div>
+                        <div class="abstract-shape" style="width:40px;height:40px;background:rgba(160,180,200,0.5);bottom:25%;right:25%;border-radius:50%;"></div>
+                        <div class="abstract-shape" style="width:50px;height:25px;background:rgba(190,205,215,0.4);top:55%;right:30%;border-radius:30% 30% 30% 30%;"></div>
+                    </div>
+                    <span class="card-badge new">New</span>
+                </div>
+                <div class="card-body">
+                    <span class="card-category">Интерьер</span>
+                    <h3 class="card-title">Постер минимализм</h3>
+                    <p class="card-desc">Матовая печать на плотной бумаге, дубовая рамка в комплекте, 40×50 см.</p>
+                    <p class="card-price">1 650 <span class="currency">₽</span></p>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- ── Подвал ── -->
+    <footer class="footer" id="contacts">
+        <div class="footer-divider"></div>
+        <p>DOUX — предметы интерьера с тихим характером</p>
+        <p style="margin-top:8px;">
+            <a href="mailto:hello@doux.ru">hello@doux.ru</a> &nbsp;·&nbsp;
+            <a href="#">Telegram</a> &nbsp;·&nbsp;
+            <a href="#">Москва, ул. Пастельная, 12</a>
+        </p>
+        <p style="margin-top:16px;color:#C8C0B6;font-size:0.72rem;">&copy; 2026 DOUX. Все права защищены.</p>
+    </footer>
+
+    <!-- ── Кнопка "наверх" ── -->
+    <a href="#" class="scroll-top" aria-label="Наверх" title="Наверх">↑</a>
+
+</body>
+</html>

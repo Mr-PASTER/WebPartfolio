@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Canvas — Роспись стен по вашему эскизу</title>
+    <link href="https://fonts.googleapis.com/css2?family=Staatliches&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #1a1a1a;
+            --bg-card: #222222;
+            --bg-modal: #1e1e1e;
+            --neon-green: #ccff00;
+            --neon-orange: #ff6b1a;
+            --neon-orange-glow: #ff8c42;
+            --text: #e0e0e0;
+            --text-muted: #999;
+            --text-dark: #111;
+            --border-subtle: #2a2a2a;
+            --danger: #ff3b3b;
+            --shadow-green: 0 0 18px rgba(204, 255, 0, 0.55), 0 0 40px rgba(204, 255, 0, 0.2);
+            --shadow-orange: 0 0 18px rgba(255, 107, 26, 0.55), 0 0 40px rgba(255, 107, 26, 0.2);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --clip-card: polygon(0 0, 100% 14px, 100% 100%, 14px 100%);
+            --clip-card-hover: polygon(0 0, 100% 18px, 100% 100%, 18px 100%);
+            --clip-modal: polygon(0 0, 100% 20px, 100% 100%, 20px 100%);
+            --radius-sm: 4px;
+            --transition-fast: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-image:
+                radial-gradient(ellipse at 15% 20%, rgba(204, 255, 0, 0.04) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 70%, rgba(255, 107, 26, 0.05) 0%, transparent 55%),
+                radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.01) 0%, transparent 70%);
+            background-attachment: fixed;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(26, 26, 26, 0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(204, 255, 0, 0.2);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            transition: var(--transition-smooth);
+        }
+
+        .header.scrolled {
+            border-bottom-color: rgba(204, 255, 0, 0.4);
+            box-shadow: 0 2px 24px rgba(0, 0, 0, 0.6);
+        }
+
+        .logo {
+            font-family: 'Staatliches', 'Impact', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 0.06em;
+            color: #fff;
+            text-transform: uppercase;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition-fast);
+            text-shadow: 0 0 30px rgba(204, 255, 0, 0.3);
+        }
+        .logo:hover {
+            text-shadow: var(--shadow-green);
+        }
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+        .logo-dot {
+            color: var(--neon-green);
+            display: inline-block;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                text-shadow: 0 0 8px var(--neon-green);
+            }
+            50% {
+                opacity: 0.5;
+                text-shadow: 0 0 20px var(--neon-green);
+            }
+        }
+
+        /* Cart icon */
+        .cart-trigger {
+            position: relative;
+            background: none;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 46px;
+            height: 46px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+            color: #fff;
+            flex-shrink: 0;
+            outline: none;
+        }
+        .cart-trigger:hover {
+            border-color: var(--neon-green);
+            box-shadow: var(--shadow-green);
+            background: rgba(204, 255, 0, 0.06);
+        }
+        .cart-trigger:active {
+            transform: scale(0.92);
+        }
+        .cart-trigger svg {
+            width: 22px;
+            height: 22px;
+            pointer-events: none;
+        }
+        .cart-badge {
+            position: absolute;
+            top: -7px;
+            right: -7px;
+            background: var(--neon-orange);
+            color: #fff;
+            font-family: 'Staatliches', sans-serif;
+            font-size: 0.75rem;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            box-shadow: 0 0 12px rgba(255, 107, 26, 0.7);
+            transition: var(--transition-fast);
+            pointer-events: none;
+        }
+        .cart-badge.bump {
+            animation: badge-bump 0.35s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        @keyframes badge-bump {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(1.45);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 28px 20px 60px;
+        }
+
+        /* Tagline */
+        .tagline {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .tagline h1 {
+            font-family: 'Staatliches', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            letter-spacing: 0.05em;
+            color: #fff;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+        .tagline span {
+            color: var(--neon-green);
+        }
+        .tagline p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            letter-spacing: 0.04em;
+            margin-top: 4px;
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 28px 0 32px;
+        }
+        .filter-label {
+            font-family: 'Staatliches', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-right: 4px;
+        }
+        .filter-btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.04em;
+            padding: 10px 20px;
+            border-radius: 0;
+            cursor: pointer;
+            background: transparent;
+            color: #bbb;
+            border: 2px solid #333;
+            text-transform: uppercase;
+            transition: var(--transition-smooth);
+            clip-path: polygon(0 0, 100% 5px, 100% 100%, 5px 100%);
+            position: relative;
+            outline: none;
+            white-space: nowrap;
+        }
+        .filter-btn:hover {
+            border-color: #555;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .filter-btn:active {
+            transform: scale(0.95);
+        }
+        .filter-btn.active {
+            color: #111;
+            font-weight: 700;
+            border-color: transparent;
+        }
+        .filter-btn.active-all {
+            background: #fff;
+            border-color: #fff;
+            color: #111;
+        }
+        .filter-btn.active-graffiti {
+            background: var(--neon-green);
+            border-color: var(--neon-green);
+            color: #111;
+            box-shadow: var(--shadow-green);
+        }
+        .filter-btn.active-abstract {
+            background: var(--neon-orange);
+            border-color: var(--neon-orange);
+            color: #fff;
+            box-shadow: var(--shadow-orange);
+        }
+        .filter-btn.active-geometry {
+            background: #111;
+            border-color: #555;
+            color: #fff;
+            box-shadow: 0 0 18px rgba(255, 255, 255, 0.2);
+        }
+        .filter-style-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            margin-right: 6px;
+            vertical-align: middle;
+            position: relative;
+            top: -1px;
+        }
+        .dot-graffiti { background: var(--neon-green); box-shadow: 0 0 6px var(--neon-green); }
+        .dot-abstract { background: var(--neon-orange); box-shadow: 0 0 6px var(--neon-orange); }
+        .dot-geometry { background: #fff; border: 1px solid #555; box-shadow: 0 0 6px rgba(255,255,255,0.4); }
+
+        /* Product grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Product card */
+        .product-card {
+            background: var(--bg-card);
+            clip-path: var(--clip-card);
+            transition: var(--transition-smooth);
+            cursor: default;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .product-card:hover {
+            clip-path: var(--clip-card-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        .product-card.filtered-out {
+            opacity: 0.18;
+            pointer-events: none;
+            transform: scale(0.94);
+            filter: grayscale(0.7) blur(1px);
+            transition: var(--transition-smooth);
+        }
+        .product-card.filtered-in {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+            filter: none;
+            transition: var(--transition-smooth);
+        }
+
+        /* Card image area */
+        .card-image {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .card-image-inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        /* Mural art */
+        .mural-art {
+            width: 75%;
+            height: 65%;
+            position: relative;
+            transition: var(--transition-smooth);
+        }
+        .product-card:hover .mural-art {
+            transform: scale(1.06) rotate(-1deg);
+        }
+        .mural-art svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.5));
+        }
+
+        /* Quick view overlay */
+        .quick-view-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition-smooth);
+            pointer-events: none;
+        }
+        .product-card:hover .quick-view-overlay,
+        .product-card:focus-within .quick-view-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .quick-view-btn {
+            font-family: 'Staatliches', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.08em;
+            padding: 12px 26px;
+            background: var(--neon-green);
+            color: #111;
+            border: none;
+            cursor: pointer;
+            clip-path: polygon(0 0, 100% 6px, 100% 100%, 6px 100%);
+            text-transform: uppercase;
+            font-weight: 700;
+            transition: var(--transition-fast);
+            box-shadow: var(--shadow-green);
+            outline: none;
+        }
+        .quick-view-btn:hover {
+            background: #dfff1a;
+            box-shadow: 0 0 28px rgba(204, 255, 0, 0.8), 0 0 50px rgba(204, 255, 0, 0.35);
+            transform: scale(1.04);
+        }
+        .quick-view-btn:active {
+            transform: scale(0.94);
+        }
+
+        /* Card info */
+        .card-info {
+            padding: 18px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: var(--bg-card);
+            position: relative;
+            z-index: 1;
+        }
+        .card-brand {
+            font-family: 'Staatliches', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            color: var(--neon-green);
+            text-transform: uppercase;
+        }
+        .card-name {
+            font-family: 'Staatliches', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 0.04em;
+            color: #fff;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+        .card-price {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--neon-orange);
+            letter-spacing: 0.02em;
+        }
+        .card-style-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 2px;
+        }
+        .style-swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+        .swatch-graffiti { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
+        .swatch-abstract { background: var(--neon-orange); box-shadow: 0 0 8px var(--neon-orange); }
+        .swatch-geometry { background: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.6); }
+        .card-style-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            letter-spacing: 0.03em;
+        }
+
+        /* ========== MODAL ========== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal {
+            background: var(--bg-modal);
+            clip-path: var(--clip-modal);
+            max-width: 560px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(204, 255, 0, 0.25);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(204, 255, 0, 0.1);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .modal-overlay.open .modal {
+            transform: translateY(0);
+        }
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            outline: none;
+            line-height: 1;
+        }
+        .modal-close:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+            box-shadow: 0 0 16px rgba(255, 59, 59, 0.6);
+        }
+        .modal-image {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .modal-image .mural-art {
+            width: 60%;
+            height: 60%;
+        }
+        .modal-body {
+            padding: 24px 28px 28px;
+        }
+        .modal-brand {
+            font-family: 'Staatliches', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            color: var(--neon-green);
+            text-transform: uppercase;
+        }
+        .modal-name {
+            font-family: 'Staatliches', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 0.04em;
+            color: #fff;
+            text-transform: uppercase;
+            margin: 4px 0 8px;
+            line-height: 1.2;
+        }
+        .modal-price {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--neon-orange);
+            letter-spacing: 0.02em;
+            margin-bottom: 12px;
+        }
+        .modal-desc {
+            color: #bbb;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+        .modal-section-label {
+            font-family: 'Staatliches', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            color: #ccc;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .size-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .size-btn {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 10px 16px;
+            border: 2px solid #444;
+            background: transparent;
+            color: #ccc;
+            cursor: pointer;
+            clip-path: polygon(0 0, 100% 4px, 100% 100%, 4px 100%);
+            transition: var(--transition-fast);
+            outline: none;
+            min-width: 48px;
+            text-align: center;
+        }
+        .size-btn:hover {
+            border-color: #888;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .size-btn.selected {
+            border-color: var(--neon-green);
+            background: var(--neon-green);
+            color: #111;
+            font-weight: 700;
+            box-shadow: var(--shadow-green);
+        }
+        .modal-add-btn {
+            font-family: 'Staatliches', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.07em;
+            padding: 14px 32px;
+            background: var(--neon-green);
+            color: #111;
+            border: none;
+            cursor: pointer;
+            clip-path: polygon(0 0, 100% 7px, 100% 100%, 7px 100%);
+            text-transform: uppercase;
+            font-weight: 700;
+            transition: var(--transition-fast);
+            box-shadow: var(--shadow-green);
+            width: 100%;
+            outline: none;
+        }
+        .modal-add-btn:hover {
+            background: #dfff1a;
+            box-shadow: 0 0 30px rgba(204, 255, 0, 0.9), 0 0 55px rgba(204, 255, 0, 0.4);
+        }
+        .modal-add-btn:active {
+            transform: scale(0.96);
+        }
+        .modal-add-btn:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+            clip-path: polygon(0 0, 100% 7px, 100% 100%, 7px 100%);
+        }
+        .size-error {
+            color: var(--neon-orange);
+            font-size: 0.8rem;
+            margin-top: -12px;
+            margin-bottom: 10px;
+            display: none;
+            letter-spacing: 0.03em;
+        }
+        .size-error.visible {
+            display: block;
+            animation: shake 0.4s ease;
+        }
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-6px);
+            }
+            50% {
+                transform: translateX(6px);
+            }
+            75% {
+                transform: translateX(-4px);
+            }
+        }
+
+        /* ========== CART DROPDOWN ========== */
+        .cart-dropdown {
+            position: fixed;
+            top: 72px;
+            right: 16px;
+            z-index: 150;
+            width: 380px;
+            max-width: calc(100vw - 32px);
+            max-height: 70vh;
+            background: #1e1e1e;
+            border: 1px solid rgba(204, 255, 0, 0.3);
+            clip-path: polygon(0 0, 100% 10px, 100% 100%, 10px 100%);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), 0 0 30px rgba(204, 255, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            overflow: hidden;
+        }
+        .cart-dropdown.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        .cart-dropdown-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-subtle);
+            font-family: 'Staatliches', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 0.06em;
+            color: #fff;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .cart-clear {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.04em;
+            color: var(--danger);
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: 600;
+            transition: var(--transition-fast);
+            padding: 4px 8px;
+            border-radius: 3px;
+        }
+        .cart-clear:hover {
+            background: rgba(255, 59, 59, 0.15);
+        }
+        .cart-items-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-height: 60px;
+            max-height: 300px;
+        }
+        .cart-empty {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 30px 10px;
+            font-size: 0.9rem;
+            letter-spacing: 0.03em;
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            clip-path: polygon(0 0, 100% 4px, 100% 100%, 4px 100%);
+            transition: var(--transition-fast);
+        }
+        .cart-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .cart-item-swatch {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .cart-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .cart-item-name {
+            font-family: 'Staatliches', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.03em;
+            color: #fff;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cart-item-detail {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            letter-spacing: 0.03em;
+        }
+        .cart-item-price {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--neon-orange);
+            flex-shrink: 0;
+        }
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 4px 6px;
+            transition: var(--transition-fast);
+            border-radius: 50%;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .cart-item-remove:hover {
+            color: var(--danger);
+            background: rgba(255, 59, 59, 0.2);
+        }
+        .cart-dropdown-footer {
+            border-top: 1px solid var(--border-subtle);
+            padding: 16px 20px;
+            flex-shrink: 0;
+        }
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Staatliches', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.05em;
+            color: #fff;
+            text-transform: uppercase;
+        }
+        .cart-total-amount {
+            color: var(--neon-orange);
+            font-size: 1.3rem;
+        }
+
+        /* ========== TOAST ========== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            z-index: 300;
+            background: #1e1e1e;
+            border: 1px solid var(--neon-green);
+            color: #fff;
+            padding: 14px 24px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
+            clip-path: polygon(0 0, 100% 6px, 100% 100%, 6px 100%);
+            box-shadow: var(--shadow-green);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            white-space: nowrap;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 14px;
+                height: 56px;
+            }
+            .logo {
+                font-size: 1.5rem;
+                gap: 6px;
+            }
+            .logo-icon {
+                width: 28px;
+                height: 28px;
+            }
+            .cart-trigger {
+                width: 38px;
+                height: 38px;
+            }
+            .cart-trigger svg {
+                width: 18px;
+                height: 18px;
+            }
+            .cart-badge {
+                min-width: 18px;
+                height: 18px;
+                font-size: 0.65rem;
+                top: -5px;
+                right: -5px;
+            }
+            .main {
+                padding: 16px 12px 40px;
+            }
+            .products-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+            .card-info {
+                padding: 12px 14px 14px;
+            }
+            .card-name {
+                font-size: 1rem;
+            }
+            .card-price {
+                font-size: 0.95rem;
+            }
+            .quick-view-btn {
+                font-size: 0.8rem;
+                padding: 10px 18px;
+            }
+            .filter-btn {
+                font-size: 0.72rem;
+                padding: 8px 14px;
+                letter-spacing: 0.03em;
+            }
+            .filter-bar {
+                gap: 8px;
+                margin: 20px 0 22px;
+            }
+            .modal {
+                max-width: 95vw;
+                max-height: 85vh;
+            }
+            .modal-body {
+                padding: 16px 18px 20px;
+            }
+            .modal-name {
+                font-size: 1.3rem;
+            }
+            .modal-price {
+                font-size: 1.2rem;
+            }
+            .size-btn {
+                padding: 8px 12px;
+                font-size: 0.75rem;
+            }
+            .cart-dropdown {
+                right: 4px;
+                top: 60px;
+                width: 340px;
+                max-width: calc(100vw - 8px);
+            }
+        }
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
+                max-width: 380px;
+                margin: 0 auto;
+            }
+            .card-image {
+                aspect-ratio: 5 / 3;
+            }
+            .mural-art {
+                width: 65%;
+                height: 55%;
+            }
+            .filter-bar {
+                gap: 6px;
+            }
+            .filter-btn {
+                font-size: 0.68rem;
+                padding: 7px 10px;
+            }
+            .filter-label {
+                font-size: 0.7rem;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 2px;
+            }
+            .tagline h1 {
+                font-size: 1.6rem;
+            }
+            .cart-dropdown {
+                width: calc(100vw - 12px);
+                right: 6px;
+                top: 56px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="header" id="header">
+        <div class="logo" aria-label="Urban Canvas — на главную">
+            <span class="logo-icon">
+                <!-- Paint roller SVG logo -->
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 26 L8 10 L14 6 L32 6 L34 10 L34 20 L28 22 L14 22 Z" fill="none" stroke="#ccff00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18 14 L24 14" stroke="#ff6b1a" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="34" cy="28" r="5" fill="none" stroke="#ccff00" stroke-width="2.5"/>
+                    <path d="M22 22 L22 30 L29 30" stroke="#ff6b1a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            Urban<span class="logo-dot">.</span>Canvas
+        </div>
+        <button class="cart-trigger" id="cartTrigger" aria-label="Корзина">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+            <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+    </header>
+
+    <!-- ==================== CART DROPDOWN ==================== -->
+    <div class="cart-dropdown" id="cartDropdown">
+        <div class="cart-dropdown-header">
+            Корзина
+            <button class="cart-clear" id="cartClear">Очистить</button>
+        </div>
+        <div class="cart-items-list" id="cartItemsList">
+            <p class="cart-empty">Пока пусто — выберите дизайн!</p>
+        </div>
+        <div class="cart-dropdown-footer">
+            <div class="cart-total-row">
+                <span>Итого:</span>
+                <span class="cart-total-amount" id="cartTotal">0₽</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST ==================== -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="main">
+        <!-- Tagline -->
+        <div class="tagline">
+            <h1>Роспись стен <span>по эскизу</span></h1>
+            <p>Превращаем серые стены в уличные галереи — выбирайте из популярных образов</p>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="filter-bar">
+            <span class="filter-label">Стиль:</span>
+            <button class="filter-btn active active-all" data-filter="all">Все</button>
+            <button class="filter-btn" data-filter="graffiti">
+                <span class="filter-style-dot dot-graffiti"></span> Граффити
+            </button>
+            <button class="filter-btn" data-filter="abstract">
+                <span class="filter-style-dot dot-abstract"></span> Абстракция
+            </button>
+            <button class="filter-btn" data-filter="geometry">
+                <span class="filter-style-dot dot-geometry"></span> Геометрия
+            </button>
+        </div>
+
+        <!-- Products grid -->
+        <div class="products-grid" id="productsGrid">
+            <!-- Card 1 — Городской закат (abstract) -->
+            <article class="product-card" data-style="abstract" data-id="1">
+                <div class="card-image">
+                    <div class="card-image-inner">
+                        <div class="mural-art">
+                            <svg viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#ff6b1a"/>
+                                        <stop offset="100%" stop-color="#ccff00"/>
+                                    </linearGradient>
+                                    <filter id="glow1"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                                </defs>
+                                <rect x="20" y="10" width="80" height="70" rx="8" fill="#1a1a1a" stroke="url(#g1)" stroke-width="2.5" filter="url(#glow1)"/>
+                                <circle cx="60" cy="45" r="22" fill="none" stroke="#ccff00" stroke-width="2" opacity="0.8"/>
+                                <path d="M40 60 L60 30 L80 60" fill="none" stroke="#ff6b1a" stroke-width="2.5" opacity="0.9"/>
+                                <path d="M30 20 L50 45 L70 20" fill="none" stroke="#ffaa00" stroke-width="1.8" opacity="0.7"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="quick-view-overlay">
+                        <button class="quick-view-btn" data-id="1">Быстрый просмотр</button>
+                    </div>
+                </div>
+                <div class="card-info">
+                    <span class="card-brand">Urban Canvas</span>
+                    <h3 class="card-name">Городской закат</h3>
+                    <span class="card-price">от 3000 ₽/м²</span>
+                    <div class="card-style-indicator">
+                        <span class="style-swatch swatch-abstract"></span>
+                        <span class="card-style-label">Абстракция</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 2 — Геометрические джунгли (geometry) -->
+            <article class="product-card" data-style="geometry" data-id="2">
+                <div class="card-image">
+                    <div class="card-image-inner">
+                        <div class="mural-art">
+                            <svg viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="glow2"><feGaussianBlur stdDeviation="1.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                                </defs>
+                                <rect x="18" y="12" width="84" height="66" rx="6" fill="#111" stroke="#fff" stroke-width="2.2" opacity="0.8" filter="url(#glow2)"/>
+                                <path d="M30 30 L50 18 L70 30 L70 54 L50 66 L30 54 Z" fill="none" stroke="#ccff00" stroke-width="2.2" opacity="0.9"/>
+                                <path d="M40 38 L55 28 L70 38 L70 52 L55 60 L40 52 Z" fill="none" stroke="#ff6b1a" stroke-width="2" opacity="0.8"/>
+                                <line x1="25" y1="78" x2="95" y2="78" stroke="#fff" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="quick-view-overlay">
+                        <button class="quick-view-btn" data-id="2">Быстрый просмотр</button>
+                    </div>
+                </div>
+                <div class="card-info">
+                    <span class="card-brand">Urban Canvas</span>
+                    <h3 class="card-name">Геометрические джунгли</h3>
+                    <span class="card-price">от 3500 ₽/м²</span>
+                    <div class="card-style-indicator">
+                        <span class="style-swatch swatch-geometry"></span>
+                        <span class="card-style-label">Геометрия</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 3 — Уличный взрыв (graffiti) -->
+            <article class="product-card" data-style="graffiti" data-id="3">
+                <div class="card-image">
+                    <div class="card-image-inner">
+                        <div class="mural-art">
+                            <svg viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="glow3"><feGaussianBlur stdDeviation="1.4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                                </defs>
+                                <path d="M20 20 Q60 5 100 20 Q110 50 90 70 Q60 85 40 70 Q15 55 20 20Z" fill="none" stroke="#ccff00" stroke-width="2.8" filter="url(#glow3)"/>
+                                <path d="M30 35 Q55 25 80 35" fill="none" stroke="#ff6b1a" stroke-width="2.5" opacity="0.8"/>
+                                <circle cx="45" cy="48" r="8" fill="none" stroke="#fff" stroke-width="2"/>
+                                <circle cx="75" cy="55" r="6" fill="#ff6b1a" opacity="0.7"/>
+                                <path d="M85 25 L95 15" stroke="#ccff00" stroke-width="2.2" opacity="0.9"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="quick-view-overlay">
+                        <button class="quick-view-btn" data-id="3">Быстрый просмотр</button>
+                    </div>
+                </div>
+                <div class="card-info">
+                    <span class="card-brand">Urban Canvas</span>
+                    <h3 class="card-name">Уличный взрыв</h3>
+                    <span class="card-price">от 4000 ₽/м²</span>
+                    <div class="card-style-indicator">
+                        <span class="style-swatch swatch-graffiti"></span>
+                        <span class="card-style-label">Граффити</span>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 4 — Космическая глубина (abstract) -->
+            <article class="product-card" data-style="abstract" data-id="4">
+                <div class="card-image">
+                    <div class="card-image-inner">
+                        <div class="mural-art">
+                            <svg viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <radialGradient id="g4" cx="50%" cy="50%" r="50%">
+                                        <stop offset="0%" stop-color="#ccff00" stop-opacity="0.8"/>
+                                        <stop offset="100%" stop-color="#1a1a1a" stop-opacity="0"/>
+                                    </radialGradient>
+                                    <filter id="glow4"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                                </defs>
+                                <rect x="15" y="10" width="90" height="70" rx="10" fill="#0a0a0a" stroke="#ff6b1a" stroke-width="2" filter="url(#glow4)"/>
+                                <circle cx="60" cy="45" r="30" fill="url(#g4)" opacity="0.4"/>
+                                <path d="M35 25 L45 45 L35 65" fill="none" stroke="#fff" stroke-width="1.8" opacity="0.6"/>
+                                <path d="M85 25 L75 45 L85 65" fill="none" stroke="#ccff00" stroke-width="2" opacity="0.8"/>
+                                <circle cx="60" cy="45" r="5" fill="#ff6b1a" opacity="0.9"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="quick-view-overlay">
+                        <button class="quick-view-btn" data-id="4">Быстрый просмотр</button>
+                    </div>
+                </div>
+                <div class="card-info">
+                    <span class="card-brand">Urban Canvas</span>
+                    <h3 class="card-name">Космическая глубина</h3>
+                    <span class="card-price">от 4500 ₽/м²</span>
+                    <div class="card-style-indicator">
+                        <span class="style-swatch swatch-abstract"></span>
+                        <span class="card-style-label">Абстракция</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <!-- ==================== MODAL ==================== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modal">
+            <button class="modal-close" id="modalClose" aria-label="Закрыть">&times;</button>
+            <div class="modal-image" id="modalImage">
+                <!-- Dynamically filled -->
+            </div>
+            <div class="modal-body">
+                <span class="modal-brand" id="modalBrand"></span>
+                <h2 class="modal-name" id="modalName"></h2>
+                <p class="modal-price" id="modalPrice"></p>
+                <p class="modal-desc" id="modalDesc"></p>
+                <p class="modal-section-label">Выберите площадь стены:</p>
+                <div class="size-options" id="sizeOptions">
+                    <button class="size-btn" data-size="до 10 м²">до 10 м²</button>
+                    <button class="size-btn" data-size="10-25 м²">10-25 м²</button>
+                    <button class="size-btn" data-size="25-50 м²">25-50 м²</button>
+                    <button class="size-btn" data-size="50+ м²">50+ м²</button>
+                </div>
+                <p class="size-error" id="sizeError">Пожалуйста, выберите площадь</p>
+                <button class="modal-add-btn" id="modalAddBtn">Добавить в корзину</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ========== PRODUCT DATA ==========
+            const products = [{
+                id: 1,
+                name: 'Городской закат',
+                brand: 'Urban Canvas',
+                price: 3000, // per m², just stored as number
+                style: 'abstract',
+                styleLabel: 'Абстракция',
+                swatchClass: 'swatch-abstract',
+                desc: 'Тёплые оранжево-зелёные переливы в духе мегаполиса. Идеально для фасадов кафе или жилых комплексов. Высокая стойкость к выцветанию.',
+                artSVG: `<svg viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs><linearGradient id="mg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff6b1a"/><stop offset="100%" stop-color="#ccff00"/></linearGradient><filter id="mglow1"><feGaussianBlur stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+                  <rect x="20" y="10" width="80" height="70" rx="8" fill="#1a1a1a" stroke="url(#mg1)" stroke-width="2.5" filter="url(#mglow1)"/>
+                  <circle cx="60" cy="45" r="22" fill="none" stroke="#ccff00" stroke-width="2" opacity="0.8"/>
+                  <path d="M40 60 L60 30 L80 60" fill="none" stroke="#ff6b1a" stroke-width="2.5" opacity="0.9"/>
+                  <path d="M30 20 L50 45 L70 20" fill="none" stroke="#ffaa00" stroke-width="1.8" opacity="0.7"/>
+                </svg>`
+            }, {
+                id: 2,
+                name: 'Геометрические джунгли',
+                brand: 'Urban Canvas',
+                price: 3500,
+                style: 'geometry',
+                styleLabel: 'Геометрия',
+                swatchClass: 'swatch-geometry',
+                desc: 'Чёткие линии и яркие контрасты создают иллюзию глубины. Подходит для современных офисов и общественных пространств.',
+                artSVG: `<svg viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs><filter id="mglow2"><feGaussianBlur stdDeviation="1.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+                  <rect x="18" y="12" width="84" height="66" rx="6" fill="#111" stroke="#fff" stroke-width="2.2" opacity="0.8" filter="url(#mglow2)"/>
+                  <path d="M30 30 L50 18 L70 30 L70 54 L50 66 L30 54 Z" fill="none" stroke="#ccff00" stroke-width="2.2" opacity="0.9"/>
+                  <path d="M40 38 L55 28 L70 38 L70 52 L55 60 L40 52 Z" fill="none" stroke="#ff6b1a" stroke-width="2" opacity="0.8"/>
+                  <line x1="25" y1="78" x2="95" y2="78" stroke="#fff" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>
+                </svg>`
+            }, {
+                id: 3,
+                name: 'Уличный взрыв',
+                brand: 'Urban Canvas',
+                price: 4000,
+                style: 'graffiti',
+                styleLabel: 'Граффити',
+                swatchClass: 'swatch-graffiti',
+                desc: 'Динамичные брызги и смелые линии в стиле стрит-арт. Для тех, кто хочет заявить о себе. Выполняется аэрозольными красками.',
+                artSVG: `<svg viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs><filter id="mglow3"><feGaussianBlur stdDeviation="1.4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+                  <path d="M20 20 Q60 5 100 20 Q110 50 90 70 Q60 85 40 70 Q15 55 20 20Z" fill="none" stroke="#ccff00" stroke-width="2.8" filter="url(#mglow3)"/>
+                  <path d="M30 35 Q55 25 80 35" fill="none" stroke="#ff6b1a" stroke-width="2.5" opacity="0.8"/>
+                  <circle cx="45" cy="48" r="8" fill="none" stroke="#fff" stroke-width="2"/>
+                  <circle cx="75" cy="55" r="6" fill="#ff6b1a" opacity="0.7"/>
+                  <path d="M85 25 L95 15" stroke="#ccff00" stroke-width="2.2" opacity="0.9"/>
+                </svg>`
+            }, {
+                id: 4,
+                name: 'Космическая глубина',
+                brand: 'Urban Canvas',
+                price: 4500,
+                style: 'abstract',
+                styleLabel: 'Абстракция',
+                swatchClass: 'swatch-abstract',
+                desc: 'Гипнотический дизайн с эффектом свечения. Премиальное покрытие с защитным лаком. Создаёт ощущение бесконечности на стене.',
+                artSVG: `<svg viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs><radialGradient id="mg4" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ccff00" stop-opacity="0.8"/><stop offset="100%" stop-color="#1a1a1a" stop-opacity="0"/></radialGradient><filter id="mglow4"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+                  <rect x="15" y="10" width="90" height="70" rx="10" fill="#0a0a0a" stroke="#ff6b1a" stroke-width="2" filter="url(#mglow4)"/>
+                  <circle cx="60" cy="45" r="30" fill="url(#mg4)" opacity="0.4"/>
+                  <path d="M35 25 L45 45 L35 65" fill="none" stroke="#fff" stroke-width="1.8" opacity="0.6"/>
+                  <path d="M85 25 L75 45 L85 65" fill="none" stroke="#ccff00" stroke-width="2" opacity="0.8"/>
+                  <circle cx="60" cy="45" r="5" fill="#ff6b1a" opacity="0.9"/>
+                </svg>`
+            }];
+
+            // ========== DOM REFS ==========
+            const header = document.getElementById('header');
+            const cartTrigger = document.getElementById('cartTrigger');
+            const cartBadge = document.getElementById('cartBadge');
+            const cartDropdown = document.getElementById('cartDropdown');
+            const cartItemsList = document.getElementById('cartItemsList');
+            const cartTotal = document.getElementById('cartTotal');
+            const cartClear = document.getElementById('cartClear');
+            const productsGrid = document.getElementById('productsGrid');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modal = document.getElementById('modal');
+            const modalClose = document.getElementById('modalClose');
+            const modalImage = document.getElementById('modalImage');
+            const modalBrand = document.getElementById('modalBrand');
+            const modalName = document.getElementById('modalName');
+            const modalPrice = document.getElementById('modalPrice');
+            const modalDesc = document.getElementById('modalDesc');
+            const sizeOptions = document.getElementById('sizeOptions');
+            const sizeError = document.getElementById('sizeError');
+            const modalAddBtn = document.getElementById('modalAddBtn');
+            const toast = document.getElementById('toast');
+            const productCards = document.querySelectorAll('.product-card');
+            const quickViewBtns = document.querySelectorAll('.quick-view-btn');
+
+            let currentProductId = null;
+            let selectedSize = null; // now holds area string like "до 10 м²"
+            let currentFilter = 'all';
+            let cart = [];
+            let cartOpen = false;
+            let toastTimer = null;
+
+            // ========== CART LOGIC (localStorage) ==========
+            function loadCart() {
+                try {
+                    const raw = localStorage.getItem('urbanCanvas_cart');
+                    cart = raw ? JSON.parse(raw) : [];
+                } catch (e) {
+                    cart = [];
+                }
+                if (!Array.isArray(cart)) cart = [];
+                cart = cart.filter(item =>
+                    item && typeof item.id === 'number' && typeof item.area === 'string' &&
+                    typeof item.quantity === 'number' && item.quantity > 0
+                );
+                saveCart();
+                updateCartUI();
+            }
+
+            function saveCart() {
+                try {
+                    localStorage.setItem('urbanCanvas_cart', JSON.stringify(cart));
+                } catch (e) {}
+            }
+
+            function getCartTotal() {
+                return cart.reduce((sum, item) => {
+                    const prod = products.find(p => p.id === item.id);
+                    return sum + (prod ? prod.price * item.quantity : 0);
+                }, 0);
+            }
+
+            function getCartCount() {
+                return cart.reduce((sum, item) => sum + item.quantity, 0);
+            }
+
+            function addToCart(productId, area) {
+                const existing = cart.find(item => item.id === productId && item.area === area);
+                if (existing) {
+                    existing.quantity += 1;
+                } else {
+                    cart.push({ id: productId, area: area, quantity: 1 });
+                }
+                saveCart();
+                updateCartUI();
+                bumpBadge();
+                showToast('Добавлено в корзину!');
+            }
+
+            function removeFromCart(productId, area) {
+                cart = cart.filter(item => !(item.id === productId && item.area === area));
+                saveCart();
+                updateCartUI();
+            }
+
+            function clearCart() {
+                cart = [];
+                saveCart();
+                updateCartUI();
+                closeCartDropdown();
+                showToast('Корзина очищена');
+            }
+
+            function updateCartUI() {
+                const count = getCartCount();
+                const total = getCartTotal();
+                cartBadge.textContent = count;
+                cartTotal.textContent = total.toLocaleString() + '₽';
+
+                if (count === 0) {
+                    cartBadge.style.opacity = '0';
+                    cartBadge.style.transform = 'scale(0.6)';
+                } else {
+                    cartBadge.style.opacity = '1';
+                    cartBadge.style.transform = 'scale(1)';
+                }
+
+                if (cart.length === 0) {
+                    cartItemsList.innerHTML = '<p class="cart-empty">Пока пусто — выберите дизайн!</p>';
+                } else {
+                    cartItemsList.innerHTML = cart.map(item => {
+                        const prod = products.find(p => p.id === item.id);
+                        if (!prod) return '';
+                        const swatchClass = prod.swatchClass || 'swatch-graffiti';
+                        return `
+                  <div class="cart-item">
+                    <span class="style-swatch cart-item-swatch ${swatchClass}"></span>
+                    <div class="cart-item-info">
+                      <div class="cart-item-name">${prod.name}</div>
+                      <div class="cart-item-detail">Площадь: ${item.area} &times; ${item.quantity}</div>
+                    </div>
+                    <span class="cart-item-price">${(prod.price * item.quantity).toLocaleString()}₽</span>
+                    <button class="cart-item-remove" data-id="${item.id}" data-area="${item.area}" title="Удалить">&times;</button>
+                  </div>`;
+                    }).join('');
+                }
+
+                cartItemsList.querySelectorAll('.cart-item-remove').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const id = parseInt(btn.dataset.id);
+                        const area = btn.dataset.area;
+                        removeFromCart(id, area);
+                    });
+                });
+            }
+
+            function bumpBadge() {
+                cartBadge.classList.remove('bump');
+                void cartBadge.offsetWidth;
+                cartBadge.classList.add('bump');
+            }
+
+            function showToast(message) {
+                if (toastTimer) clearTimeout(toastTimer);
+                toast.textContent = message;
+                toast.classList.add('show');
+                toastTimer = setTimeout(() => {
+                    toast.classList.remove('show');
+                    toastTimer = null;
+                }, 2000);
+            }
+
+            // ========== CART DROPDOWN ==========
+            function toggleCartDropdown() {
+                if (cartOpen) closeCartDropdown();
+                else openCartDropdown();
+            }
+
+            function openCartDropdown() {
+                cartDropdown.classList.add('open');
+                cartOpen = true;
+                updateCartUI();
+            }
+
+            function closeCartDropdown() {
+                cartDropdown.classList.remove('open');
+                cartOpen = false;
+            }
+
+            cartTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleCartDropdown();
+            });
+
+            cartClear.addEventListener('click', clearCart);
+
+            document.addEventListener('click', (e) => {
+                if (cartOpen && !cartDropdown.contains(e.target) && !cartTrigger.contains(e.target)) {
+                    closeCartDropdown();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && cartOpen) closeCartDropdown();
+            });
+
+            // ========== FILTER (by style) ==========
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const filterValue = btn.dataset.filter;
+                    if (currentFilter === filterValue) return;
+                    currentFilter = filterValue;
+
+                    filterBtns.forEach(b => {
+                        b.classList.remove('active', 'active-all', 'active-graffiti', 'active-abstract', 'active-geometry');
+                    });
+                    if (filterValue === 'all') btn.classList.add('active', 'active-all');
+                    else if (filterValue === 'graffiti') btn.classList.add('active', 'active-graffiti');
+                    else if (filterValue === 'abstract') btn.classList.add('active', 'active-abstract');
+                    else if (filterValue === 'geometry') btn.classList.add('active', 'active-geometry');
+
+                    productCards.forEach(card => {
+                        const cardStyles = card.dataset.style.split(' ').map(s => s.trim());
+                        if (filterValue === 'all' || cardStyles.includes(filterValue)) {
+                            card.classList.remove('filtered-out');
+                            card.classList.add('filtered-in');
+                        } else {
+                            card.classList.remove('filtered-in');
+                            card.classList.add('filtered-out');
+                        }
+                    });
+                });
+            });
+
+            // ========== MODAL LOGIC ==========
+            function openModal(productId) {
+                const prod = products.find(p => p.id === productId);
+                if (!prod) return;
+
+                currentProductId = productId;
+                selectedSize = null;
+
+                modalImage.innerHTML = `<div class="mural-art" style="width:55%;height:55%;">${prod.artSVG}</div>`;
+                modalBrand.textContent = prod.brand;
+                modalName.textContent = prod.name;
+                modalPrice.textContent = 'от ' + prod.price.toLocaleString() + ' ₽/м²';
+                modalDesc.textContent = prod.desc;
+                sizeError.classList.remove('visible');
+                modalAddBtn.disabled = false;
+                modalAddBtn.textContent = 'Добавить в корзину';
+
+                sizeOptions.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+                modalOverlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => modalClose.focus(), 100);
+            }
+
+            function closeModal() {
+                modalOverlay.classList.remove('open');
+                document.body.style.overflow = '';
+                currentProductId = null;
+                selectedSize = null;
+                sizeError.classList.remove('visible');
+            }
+
+            quickViewBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = parseInt(btn.dataset.id);
+                    openModal(id);
+                });
+            });
+
+            document.querySelectorAll('.card-image').forEach(img => {
+                img.addEventListener('click', () => {
+                    const card = img.closest('.product-card');
+                    if (card && !card.classList.contains('filtered-out')) {
+                        const id = parseInt(card.dataset.id);
+                        openModal(id);
+                    }
+                });
+            });
+
+            modalClose.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) closeModal();
+            });
+
+            sizeOptions.addEventListener('click', (e) => {
+                const btn = e.target.closest('.size-btn');
+                if (!btn) return;
+                sizeOptions.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedSize = btn.dataset.size;
+                sizeError.classList.remove('visible');
+            });
+
+            modalAddBtn.addEventListener('click', () => {
+                if (!selectedSize) {
+                    sizeError.classList.add('visible');
+                    modalAddBtn.disabled = true;
+                    modalAddBtn.textContent = 'Выберите площадь';
+                    setTimeout(() => {
+                        modalAddBtn.disabled = false;
+                        modalAddBtn.textContent = 'Добавить в корзину';
+                        sizeError.classList.remove('visible');
+                    }, 1500);
+                    return;
+                }
+                if (currentProductId) {
+                    addToCart(currentProductId, selectedSize);
+                    closeModal();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modalOverlay.classList.contains('open')) {
+                    closeModal();
+                }
+            });
+
+            // ========== HEADER SCROLL EFFECT ==========
+            let scrollTicking = false;
+            window.addEventListener('scroll', () => {
+                if (!scrollTicking) {
+                    requestAnimationFrame(() => {
+                        if (window.scrollY > 10) header.classList.add('scrolled');
+                        else header.classList.remove('scrolled');
+                        scrollTicking = false;
+                    });
+                    scrollTicking = true;
+                }
+            });
+
+            function init() {
+                loadCart();
+                updateCartUI();
+                if (getCartCount() === 0) {
+                    cartBadge.style.opacity = '0';
+                    cartBadge.style.transform = 'scale(0.6)';
+                }
+            }
+
+            init();
+            console.log('%c🎨 Urban Canvas %c— Роспись стен готова!',
+                'font-family:Staatliches,sans-serif;font-size:1.3em;color:#ccff00;',
+                'color:#ccc;');
+        })();
+    </script>
+</body>
+</html>
