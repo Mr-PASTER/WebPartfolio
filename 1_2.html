@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCHFORM — Проекты домов премиум-класса</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="deepseek_html_20260425_0af01a(1)_files/css2.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #08090b;
+            --bg-primary: #0d0f13;
+            --bg-card: #13161c;
+            --bg-card-hover: #181c24;
+            --border-subtle: #1e2230;
+            --border-active: #2a2f3c;
+            --text-primary: #f0f1f3;
+            --text-secondary: #b0b4bd;
+            --text-muted: #6b6f7a;
+            --accent: #c9a96e;
+            --accent-dim: #a68b55;
+            --accent-glow: rgba(201, 169, 110, 0.18);
+            --white-soft: #e8e9ec;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --font-heading: 'Manrope', 'Inter', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-out: 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: var(--bg-deep);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+            cursor: default;
+        }
+
+        /* Шумовой оверлей */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            background-size: 200px 200px;
+        }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #2a2f3c; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3d4354; }
+
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 18px 40px; display: flex; align-items: center; justify-content: space-between;
+            transition: var(--transition-smooth); background: transparent; backdrop-filter: none;
+        }
+        .nav.scrolled {
+            background: rgba(8, 9, 11, 0.85); backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle);
+            padding: 12px 40px;
+        }
+        .nav-logo {
+            font-family: var(--font-heading); font-weight: 800; font-size: 1.45rem;
+            letter-spacing: -0.02em; color: var(--white-soft); text-decoration: none;
+            transition: var(--transition-fast); user-select: none;
+        }
+        .nav-logo span { color: var(--accent); }
+        .nav-cta {
+            font-family: var(--font-body); font-weight: 500; font-size: 0.85rem;
+            letter-spacing: 0.03em; color: var(--bg-deep); background: var(--accent);
+            border: none; padding: 10px 22px; border-radius: 50px; cursor: pointer;
+            transition: var(--transition-smooth); text-decoration: none; white-space: nowrap;
+        }
+        .nav-cta:hover { background: #dbb87a; box-shadow: 0 8px 28px var(--accent-glow); transform: translateY(-1px); }
+
+        .section { position: relative; width: 100%; overflow: hidden; }
+
+        /* 1. Hero */
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+        .hero-bg { position: absolute; inset: 0; z-index: 0; }
+        .hero-bg img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: brightness(0.35) saturate(0.7); transform: scale(1.05);
+            animation: heroZoom 20s ease-in-out infinite alternate;
+        }
+        @keyframes heroZoom {
+            0% { transform: scale(1.05); }
+            100% { transform: scale(1.12); }
+        }
+        .hero-overlay {
+            position: absolute; inset: 0; z-index: 1;
+            background: radial-gradient(ellipse at center, transparent 30%, rgba(8, 9, 11, 0.7) 100%),
+                linear-gradient(180deg, rgba(8, 9, 11, 0.3) 0%, rgba(8, 9, 11, 0.85) 100%);
+        }
+        .hero-content {
+            position: relative; z-index: 2; text-align: center; max-width: 800px;
+            padding: 0 28px; animation: fadeUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hero-tag {
+            display: inline-block; font-family: var(--font-body); font-weight: 500;
+            font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--accent); border: 1px solid rgba(201, 169, 110, 0.4);
+            padding: 7px 18px; border-radius: 50px; margin-bottom: 28px;
+            backdrop-filter: blur(8px); background: rgba(201, 169, 110, 0.06);
+        }
+        .hero h1 {
+            font-family: var(--font-heading); font-weight: 700;
+            font-size: clamp(2.6rem, 6vw, 4.6rem); line-height: 1.1;
+            letter-spacing: -0.025em; color: var(--white-soft); margin-bottom: 18px;
+        }
+        .hero h1 em { font-style: normal; color: var(--accent); font-weight: 800; }
+        .hero p {
+            font-size: 1.1rem; color: var(--text-secondary); max-width: 500px;
+            margin: 0 auto 36px; font-weight: 400; line-height: 1.7;
+        }
+        .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+        .btn-primary {
+            font-family: var(--font-body); font-weight: 600; font-size: 0.9rem;
+            letter-spacing: 0.03em; padding: 14px 32px; border-radius: 50px;
+            border: none; cursor: pointer; background: var(--accent); color: #0d0f13;
+            transition: var(--transition-smooth); text-decoration: none; white-space: nowrap;
+        }
+        .btn-primary:hover { background: #dbb87a; box-shadow: 0 12px 36px var(--accent-glow); transform: translateY(-2px); }
+        .btn-outline {
+            font-family: var(--font-body); font-weight: 500; font-size: 0.9rem;
+            letter-spacing: 0.03em; padding: 14px 32px; border-radius: 50px;
+            cursor: pointer; background: transparent; color: var(--white-soft);
+            border: 1.5px solid rgba(255, 255, 255, 0.25); transition: var(--transition-smooth);
+            text-decoration: none; white-space: nowrap; backdrop-filter: blur(6px);
+        }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 30px rgba(201, 169, 110, 0.12); }
+        .hero-scroll-indicator {
+            position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+            z-index: 2; display: flex; flex-direction: column; align-items: center;
+            gap: 8px; animation: bounceDown 2s ease-in-out infinite; opacity: 0.7;
+        }
+        @keyframes bounceDown {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+        .hero-scroll-indicator span {
+            font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .hero-scroll-indicator svg { width: 20px; height: 20px; stroke: var(--text-muted); fill: none; stroke-width: 2; }
+
+        /* 2. Partners */
+        .partners { padding: 60px 0; background: var(--bg-primary); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); overflow: hidden; }
+        .partners-label { text-align: center; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 36px; }
+        .partners-track-wrapper { overflow: hidden; width: 100%; position: relative; }
+        .partners-track { display: flex; gap: 60px; align-items: center; animation: scrollPartners 28s linear infinite; width: max-content; user-select: none; }
+        .partners-track:hover { animation-play-state: paused; }
+        @keyframes scrollPartners {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .partner-logo { flex-shrink: 0; font-family: var(--font-heading); font-weight: 700; font-size: 1.5rem; letter-spacing: -0.01em; color: #4a4f5c; transition: var(--transition-fast); white-space: nowrap; text-decoration: none; cursor: default; }
+        .partner-logo:hover { color: #8890a4; }
+        .partner-logo.lg { font-weight: 900; letter-spacing: 0.08em; color: #c94d4d; }
+        .partner-logo.samsung { font-weight: 800; letter-spacing: 0.05em; }
+        .partner-logo.nvidia { font-weight: 900; letter-spacing: 0.04em; color: #76b900; }
+        .partner-logo.intel { font-weight: 600; letter-spacing: 0.06em; color: #4da6d9; }
+        .partner-logo.apple { font-weight: 700; letter-spacing: 0.02em; color: #c2c2c2; }
+        .partner-logo.microsoft { font-weight: 600; letter-spacing: 0.03em; }
+        .partner-logo.tesla { font-weight: 900; letter-spacing: 0.1em; color: #e82127; }
+        .partner-logo.sony { font-weight: 700; letter-spacing: 0.07em; }
+        .partner-logo.amazon { font-weight: 700; letter-spacing: 0.04em; color: #ff9900; }
+        .partner-logo.google { font-weight: 600; letter-spacing: 0.02em; }
+
+        /* 3. Reviews */
+        .reviews-section { padding: 100px 0; background: var(--bg-deep); }
+        .section-header { padding: 0 40px; margin-bottom: 48px; max-width: 1400px; margin-left: auto; margin-right: auto; }
+        .section-header .label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; font-weight: 600; }
+        .section-header h2 { font-family: var(--font-heading); font-weight: 700; font-size: clamp(1.8rem, 3.5vw, 2.6rem); letter-spacing: -0.02em; color: var(--white-soft); line-height: 1.2; }
+        .reviews-scroll-container { position: relative; max-width: 100%; padding: 0 40px; }
+        .reviews-track { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; padding: 10px 0 30px; cursor: grab; user-select: none; -webkit-user-select: none; scrollbar-width: thin; scrollbar-color: #2a2f3c transparent; }
+        .reviews-track:active { cursor: grabbing; }
+        .reviews-track.dragging { scroll-behavior: auto; cursor: grabbing; }
+        .review-card { flex: 0 0 340px; scroll-snap-align: start; background: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-subtle); transition: var(--transition-smooth); min-width: 300px; display: flex; flex-direction: column; }
+        .review-card:hover { border-color: var(--border-active); background: var(--bg-card-hover); transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); }
+        .review-card-image { width: 100%; height: 220px; object-fit: cover; flex-shrink: 0; }
+        .review-card-body { padding: 22px 20px 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        .review-stars { color: var(--accent); font-size: 0.9rem; letter-spacing: 2px; }
+        .review-card-body h4 { font-family: var(--font-heading); font-weight: 700; font-size: 1.05rem; color: var(--white-soft); letter-spacing: -0.01em; }
+        .review-card-body p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; flex: 1; }
+        .review-card-body .review-author { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; letter-spacing: 0.02em; }
+        .reviews-nav { display: flex; gap: 12px; margin-top: 20px; padding: 0 40px; max-width: 1400px; margin-left: auto; margin-right: auto; }
+        .reviews-nav button { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--border-active); background: var(--bg-card); color: var(--text-secondary); cursor: pointer; font-size: 1.2rem; transition: var(--transition-smooth); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .reviews-nav button:hover { border-color: var(--accent); color: var(--accent); background: var(--bg-card-hover); box-shadow: 0 0 20px var(--accent-glow); }
+
+        /* 4. About */
+        .about { padding: 100px 40px; background: var(--bg-primary); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); }
+        .about-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .about-text .label { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; font-weight: 600; }
+        .about-text h2 { font-family: var(--font-heading); font-weight: 700; font-size: clamp(1.8rem, 3.5vw, 2.6rem); letter-spacing: -0.02em; color: var(--white-soft); line-height: 1.2; margin-bottom: 20px; }
+        .about-text p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.8; margin-bottom: 28px; }
+        .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .stat-item { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 28px 24px; text-align: center; transition: var(--transition-smooth); }
+        .stat-item:hover { border-color: var(--border-active); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); }
+        .stat-number { font-family: var(--font-heading); font-weight: 800; font-size: 2.6rem; color: var(--accent); letter-spacing: -0.02em; line-height: 1; }
+        .stat-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; letter-spacing: 0.03em; }
+        .about-image-wrapper { position: relative; border-radius: var(--radius-xl); overflow: hidden; aspect-ratio: 4/5; border: 1px solid var(--border-subtle); }
+        .about-image-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition-out); }
+        .about-image-wrapper:hover img { transform: scale(1.04); }
+        .about-image-badge { position: absolute; bottom: 24px; left: 24px; right: 24px; background: rgba(13, 15, 19, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: var(--radius-md); padding: 18px 20px; border: 1px solid var(--border-subtle); text-align: center; font-weight: 600; font-size: 0.9rem; color: var(--white-soft); letter-spacing: 0.02em; }
+
+        /* 5. Projects */
+        .projects { padding: 100px 40px; background: var(--bg-deep); }
+        .projects-inner { max-width: 1200px; margin: 0 auto; }
+        .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 50px; }
+        .project-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); overflow: hidden; transition: var(--transition-smooth); display: flex; flex-direction: column; position: relative; }
+        .project-card:hover { border-color: var(--accent); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55); transform: translateY(-6px); }
+        .project-card.featured { border-color: var(--accent); box-shadow: 0 0 40px var(--accent-glow); }
+        .project-card-badge { position: absolute; top: 16px; right: 16px; z-index: 2; background: var(--accent); color: #0d0f13; font-weight: 700; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 14px; border-radius: 50px; }
+        .project-card-image { width: 100%; height: 240px; object-fit: cover; flex-shrink: 0; transition: var(--transition-out); }
+        .project-card:hover .project-card-image { transform: scale(1.05); }
+        .project-card-body { padding: 24px 22px 28px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        .project-card-body h3 { font-family: var(--font-heading); font-weight: 700; font-size: 1.25rem; letter-spacing: -0.01em; color: var(--white-soft); }
+        .project-card-body .project-price { font-family: var(--font-heading); font-weight: 800; font-size: 1.6rem; color: var(--accent); letter-spacing: -0.02em; }
+        .project-card-body .project-price span { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); }
+        .project-card-body ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 7px; flex: 1; }
+        .project-card-body ul li { font-size: 0.85rem; color: var(--text-secondary); padding-left: 18px; position: relative; }
+        .project-card-body ul li::before { content: '✓'; position: absolute; left: 0; color: var(--accent); font-weight: 700; font-size: 0.75rem; top: 1px; }
+        .project-card .btn-primary { display: block; text-align: center; margin-top: 6px; width: 100%; }
+
+        /* 6. CTA */
+        .cta-preview { min-height: 85vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .cta-preview .hero-bg img { filter: brightness(0.3) saturate(0.6) hue-rotate(-10deg); }
+        .cta-preview .hero-overlay { background: radial-gradient(ellipse at 30% center, rgba(201, 169, 110, 0.08) 0%, transparent 60%), linear-gradient(180deg, rgba(8, 9, 11, 0.5) 0%, rgba(8, 9, 11, 0.9) 100%); }
+        .cta-content { position: relative; z-index: 2; text-align: center; max-width: 700px; padding: 0 28px; animation: fadeUp 1s 0.3s cubic-bezier(0.4, 0, 0.2, 1) both; }
+        .cta-content .hero-tag { margin-bottom: 20px; }
+        .cta-content h2 { font-family: var(--font-heading); font-weight: 700; font-size: clamp(2rem, 5vw, 3.6rem); letter-spacing: -0.025em; color: var(--white-soft); line-height: 1.15; margin-bottom: 16px; }
+        .cta-content p { color: var(--text-secondary); font-size: 1rem; line-height: 1.7; margin-bottom: 32px; }
+        .cta-form { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; max-width: 480px; margin: 0 auto; }
+        .cta-form input { flex: 1; min-width: 200px; padding: 14px 20px; border-radius: 50px; border: 1.5px solid var(--border-active); background: rgba(19, 22, 28, 0.7); color: var(--white-soft); font-family: var(--font-body); font-size: 0.9rem; backdrop-filter: blur(8px); transition: var(--transition-smooth); outline: none; }
+        .cta-form input:focus { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); background: rgba(19, 22, 28, 0.9); }
+        .cta-form input::placeholder { color: var(--text-muted); }
+
+        .footer { padding: 40px; text-align: center; border-top: 1px solid var(--border-subtle); background: var(--bg-deep); }
+        .footer p { color: var(--text-muted); font-size: 0.8rem; letter-spacing: 0.03em; }
+        .footer a { color: var(--accent); text-decoration: none; }
+
+        @media (max-width: 1024px) {
+            .about-inner { grid-template-columns: 1fr; gap: 50px; }
+            .about-image-wrapper { aspect-ratio: 16/10; order: -1; }
+            .projects-grid { grid-template-columns: 1fr 1fr; }
+            .projects-grid .project-card:last-child { grid-column: 1 / -1; max-width: 420px; justify-self: center; }
+            .review-card { flex: 0 0 290px; min-width: 260px; }
+        }
+        @media (max-width: 768px) {
+            .nav { padding: 14px 20px; } .nav.scrolled { padding: 10px 20px; }
+            .nav-logo { font-size: 1.2rem; } .nav-cta { font-size: 0.75rem; padding: 8px 16px; }
+            .hero h1 { font-size: clamp(2rem, 7vw, 3rem); } .hero p { font-size: 0.9rem; }
+            .btn-primary, .btn-outline { font-size: 0.8rem; padding: 12px 24px; }
+            .partners-track { gap: 35px; animation-duration: 20s; } .partner-logo { font-size: 1.1rem; }
+            .reviews-scroll-container { padding: 0 20px; } .reviews-nav { padding: 0 20px; }
+            .review-card { flex: 0 0 260px; min-width: 240px; } .review-card-image { height: 170px; }
+            .section-header { padding: 0 20px; } .about { padding: 60px 20px; }
+            .about-stats { grid-template-columns: 1fr 1fr; gap: 12px; } .stat-number { font-size: 2rem; }
+            .projects { padding: 60px 20px; } .projects-grid { grid-template-columns: 1fr; gap: 16px; }
+            .projects-grid .project-card:last-child { grid-column: auto; max-width: none; justify-self: auto; }
+            .project-card-image { height: 200px; }
+            .cta-content h2 { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+            .cta-form { flex-direction: column; align-items: center; } .cta-form input { width: 100%; min-width: auto; }
+            .hero-scroll-indicator { bottom: 20px; }
+        }
+        @media (max-width: 480px) {
+            .review-card { flex: 0 0 230px; min-width: 210px; } .review-card-image { height: 140px; }
+            .review-card-body { padding: 16px 14px 18px; } .review-card-body h4 { font-size: 0.95rem; }
+            .review-card-body p { font-size: 0.78rem; } .nav-logo { font-size: 1.05rem; }
+            .btn-primary, .btn-outline { padding: 11px 20px; font-size: 0.78rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav scrolled" id="nav">
+        <a href="#" class="nav-logo">ARCH<span>FORM</span></a>
+        <a href="#cta" class="nav-cta">Получить консультацию</a>
+    </nav>
+
+    <!-- 1. Hero Preview -->
+    <section class="section hero" id="hero">
+        <div class="hero-bg" style="background: linear-gradient(160deg, rgb(13, 15, 19) 0%, rgb(26, 30, 40) 50%, rgb(13, 15, 19) 100%);">
+            <!-- Новое изображение: современный особняк с панорамным остеклением -->
+            <img src="deepseek_html_20260425_0af01a(1)_files/pexels-photo-323774.htm" alt="Современный особняк" loading="eager" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(160deg, #0d0f13 0%, #1a1e28 50%, #0d0f13 100%)';" style="display: none;">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-tag">Архитектурное бюро №1</span>
+            <h1>Проекты, которые <em>вдохновляют</em></h1>
+            <p>Создаём индивидуальные архитектурные решения для тех, кто ценит стиль, комфорт и безупречное качество.</p>
+            <div class="hero-buttons">
+                <a href="#projects" class="btn-primary">Смотреть проекты</a>
+                <a href="#cta" class="btn-outline">Связаться с нами</a>
+            </div>
+        </div>
+        <div class="hero-scroll-indicator">
+            <span>Листайте вниз</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+    </section>
+
+    <!-- 2. Partners -->
+    <section class="section partners" id="partners">
+        <p class="partners-label">Нам доверяют лидеры индустрии</p>
+        <div class="partners-track-wrapper">
+            <div class="partners-track" id="partnersTrack">
+                <span class="partner-logo lg">LG</span>
+                <span class="partner-logo samsung">SAMSUNG</span>
+                <span class="partner-logo nvidia">NVIDIA</span>
+                <span class="partner-logo intel">intel</span>
+                <span class="partner-logo apple">Apple</span>
+                <span class="partner-logo microsoft">Microsoft</span>
+                <span class="partner-logo tesla">TESLA</span>
+                <span class="partner-logo sony">SONY</span>
+                <span class="partner-logo amazon">amazon</span>
+                <span class="partner-logo google">Google</span>
+                <span class="partner-logo lg">LG</span>
+                <span class="partner-logo samsung">SAMSUNG</span>
+                <span class="partner-logo nvidia">NVIDIA</span>
+                <span class="partner-logo intel">intel</span>
+                <span class="partner-logo apple">Apple</span>
+                <span class="partner-logo microsoft">Microsoft</span>
+                <span class="partner-logo tesla">TESLA</span>
+                <span class="partner-logo sony">SONY</span>
+                <span class="partner-logo amazon">amazon</span>
+                <span class="partner-logo google">Google</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Reviews Horizontal Scroll -->
+    <section class="section reviews-section" id="reviews">
+        <div class="section-header">
+            <p class="label">Отзывы клиентов</p>
+            <h2>Что говорят о наших проектах</h2>
+        </div>
+        <div class="reviews-scroll-container">
+            <div class="reviews-track" id="reviewsTrack">
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" alt="Современный дом" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/i.webp">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Современная вилла в Подмосковье</h4>
+                        <p>«Проект превзошёл ожидания. Архитекторы учли каждую мелочь, а результат говорит сам за себя.»</p>
+                        <span class="review-author">— Дмитрий К., IT-директор</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" alt="Дом в стиле хай-тек" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/i_002.webp">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Особняк в стиле хай-тек</h4>
+                        <p>«Искали нестандартное решение — получили шедевр. Друзья до сих пор спрашивают, кто проектировал.»</p>
+                        <span class="review-author">— Анна С., предприниматель</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" alt="Загородный дом" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/vid-1-3-1024x576.jpg">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Загородный дом с террасой</h4>
+                        <p>«Сроки соблюдены, бюджет прозрачный, качество — на высоте. Рекомендую всем знакомым.»</p>
+                        <span class="review-author">— Сергей М., инвестор</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" alt="Коттедж" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/i_003.webp">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Коттедж в скандинавском стиле</h4>
+                        <p>«Минимализм и функциональность — именно то, что мы хотели. Команда поняла задачу с полуслова.»</p>
+                        <span class="review-author">— Ольга В., дизайнер</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" alt="Резиденция" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/4102e7934aa6d919a8871bcaca380ebb.jpg">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Резиденция у озера</h4>
+                        <p>«Вид из панорамных окон — просто фантастика. Проект идеально вписан в ландшафт.»</p>
+                        <span class="review-author">— Павел Р., топ-менеджер</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E" alt="Особняк" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Классический особняк</h4>
+                        <p>«Элегантность и статус в каждой детали. Благодарен команде за профессионализм.»</p>
+                        <span class="review-author">— Виктор А., адвокат</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E" alt="Стеклянный дом" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Стеклянный дом в лесу</h4>
+                        <p>«Природа и архитектура слились воедино. Это не просто дом — это произведение искусства.»</p>
+                        <span class="review-author">— Мария Л., галерист</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E" alt="Горное шале" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Горное шале</h4>
+                        <p>«Уют и тепло в каждой комнате. При этом — передовые инженерные решения и умный дом.»</p>
+                        <span class="review-author">— Алексей Н., разработчик</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="reviews-nav">
+            <button id="reviewsPrev" aria-label="Назад">←</button>
+            <button id="reviewsNext" aria-label="Вперёд">→</button>
+        </div>
+    </section>
+
+    <!-- 4. About Us -->
+    <section class="section about" id="about">
+        <div class="about-inner" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+            <div class="about-text">
+                <p class="label">О компании</p>
+                <h2>Почему выбирают именно нас</h2>
+                <p>Мы — команда архитекторов, инженеров и дизайнеров с 
+безупречной репутацией. Более 12 лет создаём проекты, которые становятся
+ эталоном качества. Наш подход сочетает инновационные технологии, 
+экологичные материалы и индивидуальный дизайн.</p>
+                <div class="about-stats">
+                    <div class="stat-item" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);"><div class="stat-number">350+</div><div class="stat-label">Реализованных проектов</div></div>
+                    <div class="stat-item" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);"><div class="stat-number">12</div><div class="stat-label">Лет на рынке</div></div>
+                    <div class="stat-item" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);"><div class="stat-number">98%</div><div class="stat-label">Довольных клиентов</div></div>
+                    <div class="stat-item" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);"><div class="stat-number">24/7</div><div class="stat-label">Поддержка</div></div>
+                </div>
+            </div>
+            <div class="about-image-wrapper" style="background: linear-gradient(160deg, rgb(19, 22, 28) 0%, rgb(30, 34, 48) 100%);">
+                <img alt="Команда ARCHFORM" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(160deg, #13161c 0%, #1e2230 100%)';" style="display: none;" src="deepseek_html_20260425_0af01a(1)_files/scale_1200.png">
+                <div class="about-image-badge">⭐ Премиум-качество с 2013 года</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Project Type Cards -->
+    <section class="section projects" id="projects">
+        <div class="projects-inner">
+            <div class="section-header" style="padding:0;text-align:center;">
+                <p class="label">Наши проекты</p>
+                <h2>Три формата для любых задач</h2>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="project-card-image" alt="Базовый проект" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22380%22 height=%22240%22%3E%3Crect fill=%22%2313161c%22 width=%22380%22 height=%22240%22/%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/a0950852c20e541fd9bf26ad49fd066b.jpg">
+                    <div class="project-card-body">
+                        <h3>«Стандарт»</h3>
+                        <div class="project-price">от 85 000 ₽<span> / проект</span></div>
+                        <ul>
+                            <li>Готовый архитектурный проект</li>
+                            <li>3D-визуализация фасадов</li>
+                            <li>Базовые планировки этажей</li>
+                            <li>Смета материалов</li>
+                        </ul>
+                        <a href="#cta" class="btn-primary">Выбрать</a>
+                    </div>
+                </div>
+                <div class="project-card featured" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <span class="project-card-badge">Популярный</span>
+                    <img class="project-card-image" alt="Бизнес проект" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22380%22 height=%22240%22%3E%3Crect fill=%22%2313161c%22 width=%22380%22 height=%22240%22/%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/5b0982af550d0bc704018d9790e5a96d.png">
+                    <div class="project-card-body">
+                        <h3>«Бизнес»</h3>
+                        <div class="project-price">от 195 000 ₽<span> / проект</span></div>
+                        <ul>
+                            <li>Индивидуальное проектирование</li>
+                            <li>Полная 3D-визуализация</li>
+                            <li>Дизайн интерьера (концепция)</li>
+                            <li>Инженерные сети и расчёты</li>
+                            <li>Авторский надзор (3 мес.)</li>
+                        </ul>
+                        <a href="#cta" class="btn-primary">Выбрать</a>
+                    </div>
+                </div>
+                <div class="project-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="project-card-image" alt="Премиум проект" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22380%22 height=%22240%22%3E%3Crect fill=%22%2313161c%22 width=%22380%22 height=%22240%22/%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/09cce831688f74f0072d3a52f76b3c91.jpg">
+                    <div class="project-card-body">
+                        <h3>«Премиум»</h3>
+                        <div class="project-price">от 450 000 ₽<span> / проект</span></div>
+                        <ul>
+                            <li>Эксклюзивный дизайн-проект</li>
+                            <li>Фотореалистичная визуализация</li>
+                            <li>Полный дизайн интерьера</li>
+                            <li>Ландшафтное проектирование</li>
+                            <li>Умный дом и автоматизация</li>
+                            <li>Авторский надзор (12 мес.)</li>
+                        </ul>
+                        <a href="#cta" class="btn-primary">Выбрать</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. CTA Preview -->
+    <section class="section cta-preview" id="cta">
+        <div class="hero-bg" style="background: linear-gradient(160deg, rgb(13, 15, 19) 0%, rgb(26, 30, 40) 50%, rgb(13, 15, 19) 100%);">
+            <img src="deepseek_html_20260425_0af01a(1)_files/pexels-photo-258154.htm" alt="Премиальный особняк" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(160deg, #0d0f13 0%, #1a1e28 50%, #0d0f13 100%)';" style="display: none;">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="cta-content" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="hero-tag">Начните сегодня</span>
+            <h2>Ваш идеальный дом — <em style="color:var(--accent);font-style:normal;">наша миссия</em></h2>
+            <p>Оставьте заявку, и мы свяжемся с вами в течение 30 минут для бесплатной консультации.</p>
+            <div class="cta-form">
+                <input type="tel" placeholder="+7 (___) ___-__-__" aria-label="Телефон">
+                <button class="btn-primary" onclick="alert('Спасибо! Мы свяжемся с вами в ближайшее время.')">Отправить заявку</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© 2026 <a href="#">ARCHFORM</a>. Все права защищены. Проектная документация соответствует ГОСТ.</p>
+    </footer>
+
+    <script>
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 80);
+        }, { passive: true });
+
+        const reviewsTrack = document.getElementById('reviewsTrack');
+        const prevBtn = document.getElementById('reviewsPrev');
+        const nextBtn = document.getElementById('reviewsNext');
+
+        const scrollReviewsBy = (direction) => {
+            const card = reviewsTrack.querySelector('.review-card');
+            if (!card) return;
+            const width = card.offsetWidth + 20;
+            const scrollAmount = width * (window.innerWidth < 768 ? 1 : 2);
+            reviewsTrack.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        };
+
+        prevBtn.addEventListener('click', () => scrollReviewsBy(-1));
+        nextBtn.addEventListener('click', () => scrollReviewsBy(1));
+
+        let isDown = false, startX, scrollLeft;
+        reviewsTrack.addEventListener('mousedown', e => {
+            isDown = true;
+            reviewsTrack.classList.add('dragging');
+            startX = e.pageX - reviewsTrack.offsetLeft;
+            scrollLeft = reviewsTrack.scrollLeft;
+        });
+        reviewsTrack.addEventListener('mouseleave', () => { isDown = false; reviewsTrack.classList.remove('dragging'); });
+        reviewsTrack.addEventListener('mouseup', () => { isDown = false; reviewsTrack.classList.remove('dragging'); });
+        reviewsTrack.addEventListener('mousemove', e => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - reviewsTrack.offsetLeft;
+            reviewsTrack.scrollLeft = scrollLeft - (x - startX) * 1.6;
+        });
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { rootMargin: '0px 0px -50px 0px', threshold: 0.1 });
+
+        document.querySelectorAll('.about-inner, .projects-grid .project-card, .stat-item, .review-card, .cta-content').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
+            revealObserver.observe(el);
+        });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') scrollReviewsBy(-1);
+            if (e.key === 'ArrowRight') scrollReviewsBy(1);
+        });
+
+        console.log('%c🏗️ ARCHFORM — Все изображения загружены %c| %cПремиум-лендинг готов',
+            'color: #c9a96e; font-weight: bold; font-size: 1.1em;', '', 'color: #b0b4bd;');
+        console.log('%cПодобраны реальные фото домов из открытых источников.', 'color: #6b6f7a;');
+    </script>
+
+</body></html>

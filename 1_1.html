@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCHFORM — Проекты домов премиум-класса</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=JetBrains+Mono:wght@350;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #08090b;
+            --bg-primary: #0c0d10;
+            --bg-card: #111215;
+            --bg-card-hover: #16181c;
+            --border-subtle: #1e2025;
+            --border-active: #2c2e33;
+            --text-primary: #ebedf0;
+            --text-secondary: #a1a4ab;
+            --text-muted: #5d6068;
+            --accent: #c9a96e;
+            --accent-dim: #a68b55;
+            --accent-glow: rgba(201, 169, 110, 0.12);
+            --white-soft: #ecedef;
+            --radius-sm: 0px;
+            --radius-md: 2px;
+            --radius-lg: 4px;
+            --radius-xl: 6px;
+            --font-heading: 'Inter', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+            --font-body: 'Inter', system-ui, sans-serif;
+            --transition-fast: 0.18s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --transition-smooth: 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --transition-out: 0.45s cubic-bezier(0.55, 0, 0.45, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: var(--bg-deep);
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.55;
+            overflow-x: hidden;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+            cursor: default;
+            letter-spacing: -0.01em;
+        }
+
+        /* Тонкая архитектурная сетка на фоне вместо шума */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.04;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.5) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center center;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #23252b;
+            border-radius: 0px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #33363d;
+        }
+
+        /* Навигация — строгая полоска */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition-smooth);
+            background: transparent;
+            backdrop-filter: none;
+            border-bottom: 1px solid transparent;
+        }
+        .nav.scrolled {
+            background: rgba(8, 9, 11, 0.9);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 12px 40px;
+        }
+        .nav-logo {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.35rem;
+            letter-spacing: -0.03em;
+            color: var(--white-soft);
+            text-decoration: none;
+            transition: var(--transition-fast);
+            user-select: none;
+            text-transform: uppercase;
+        }
+        .nav-logo span {
+            color: var(--accent);
+            font-weight: 800;
+        }
+        .nav-cta {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            background: transparent;
+            border: 1px solid var(--accent);
+            padding: 9px 20px;
+            border-radius: 0px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+        .nav-cta:hover {
+            background: var(--accent);
+            color: #0d0f13;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(201, 169, 110, 0.1);
+        }
+
+        .section {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* 1. Hero — асимметричный минимализм */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            overflow: hidden;
+            padding-left: 8vw;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+        .hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.28) saturate(0.5) contrast(1.1);
+            transform: scale(1.05);
+            animation: heroZoom 24s ease-in-out infinite alternate;
+        }
+        @keyframes heroZoom {
+            0% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1.13);
+            }
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background:
+                linear-gradient(135deg, rgba(8, 9, 11, 0.88) 0%, rgba(8, 9, 11, 0.3) 55%, rgba(8, 9, 11, 0.7) 100%),
+                linear-gradient(0deg, rgba(8, 9, 11, 0.5) 0%, transparent 60%);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+            max-width: 680px;
+            padding: 0 28px;
+            animation: fadeUp 1.3s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            border-left: 2px solid var(--accent);
+            padding-left: 36px;
+            margin-left: 0;
+        }
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(45px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .hero-tag {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 0.68rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--accent);
+            border: none;
+            padding: 0 0 8px 0;
+            margin-bottom: 24px;
+            background: transparent;
+            border-bottom: 1px solid rgba(201, 169, 110, 0.5);
+            border-radius: 0;
+            backdrop-filter: none;
+        }
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: clamp(2.8rem, 6.5vw, 5rem);
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            color: var(--white-soft);
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+        .hero h1 em {
+            font-style: normal;
+            color: var(--accent);
+            font-weight: 700;
+            display: block;
+            font-size: 0.9em;
+            letter-spacing: -0.02em;
+        }
+        .hero p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            max-width: 440px;
+            margin: 0 0 38px 0;
+            font-weight: 350;
+            line-height: 1.7;
+            letter-spacing: 0.01em;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+        .btn-primary {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            padding: 14px 28px;
+            border-radius: 0px;
+            border: 1px solid var(--accent);
+            cursor: pointer;
+            background: var(--accent);
+            color: #0d0f13;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+            white-space: nowrap;
+            text-transform: uppercase;
+            position: relative;
+        }
+        .btn-primary:hover {
+            background: #d4b377;
+            border-color: #d4b377;
+            box-shadow: 0 8px 24px rgba(201, 169, 110, 0.15);
+            transform: translateY(-1px);
+            color: #08090b;
+        }
+        .btn-outline {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            padding: 14px 28px;
+            border-radius: 0px;
+            cursor: pointer;
+            background: transparent;
+            color: var(--white-soft);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: var(--transition-smooth);
+            text-decoration: none;
+            white-space: nowrap;
+            backdrop-filter: none;
+            text-transform: uppercase;
+        }
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(201, 169, 110, 0.05);
+            box-shadow: 0 0 0 4px rgba(201, 169, 110, 0.06);
+        }
+        .hero-scroll-indicator {
+            position: absolute;
+            bottom: 32px;
+            left: 8vw;
+            transform: translateX(0);
+            z-index: 2;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 14px;
+            animation: bounceDown 2.2s ease-in-out infinite;
+            opacity: 0.65;
+        }
+        @keyframes bounceDown {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(10px);
+            }
+        }
+        .hero-scroll-indicator span {
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .hero-scroll-indicator svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--text-muted);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* 2. Partners — строгая бегущая строка */
+        .partners {
+            padding: 50px 0;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+            overflow: hidden;
+        }
+        .partners-label {
+            text-align: center;
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 34px;
+        }
+        .partners-track-wrapper {
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+        }
+        .partners-track {
+            display: flex;
+            gap: 70px;
+            align-items: center;
+            animation: scrollPartners 30s linear infinite;
+            width: max-content;
+            user-select: none;
+        }
+        .partners-track:hover {
+            animation-play-state: paused;
+        }
+        @keyframes scrollPartners {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+        .partner-logo {
+            flex-shrink: 0;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 1.4rem;
+            letter-spacing: 0.04em;
+            color: #3a3d45;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+            text-decoration: none;
+            cursor: default;
+            text-transform: uppercase;
+        }
+        .partner-logo:hover {
+            color: #6b6f7a;
+        }
+        .partner-logo.lg {
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: #c94d4d;
+        }
+        .partner-logo.samsung {
+            font-weight: 700;
+            letter-spacing: 0.08em;
+        }
+        .partner-logo.nvidia {
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            color: #76b900;
+        }
+        .partner-logo.intel {
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: #4da6d9;
+        }
+        .partner-logo.apple {
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #c2c2c2;
+        }
+        .partner-logo.microsoft {
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+        .partner-logo.tesla {
+            font-weight: 900;
+            letter-spacing: 0.12em;
+            color: #e82127;
+        }
+        .partner-logo.sony {
+            font-weight: 700;
+            letter-spacing: 0.09em;
+        }
+        .partner-logo.amazon {
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: #ff9900;
+        }
+        .partner-logo.google {
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        /* 3. Reviews — горизонтальный скролл с жёсткими картами */
+        .reviews-section {
+            padding: 90px 0;
+            background: var(--bg-deep);
+        }
+        .section-header {
+            padding: 0 40px;
+            margin-bottom: 44px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .section-header .label {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-weight: 500;
+            display: inline-block;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 6px;
+        }
+        .section-header h2 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+            letter-spacing: -0.03em;
+            color: var(--white-soft);
+            line-height: 1.15;
+            text-transform: uppercase;
+        }
+        .reviews-scroll-container {
+            position: relative;
+            max-width: 100%;
+            padding: 0 40px;
+        }
+        .reviews-track {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            padding: 8px 0 28px;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+            scrollbar-width: thin;
+            scrollbar-color: #2a2d33 transparent;
+        }
+        .reviews-track:active {
+            cursor: grabbing;
+        }
+        .reviews-track.dragging {
+            scroll-behavior: auto;
+            cursor: grabbing;
+        }
+        .review-card {
+            flex: 0 0 340px;
+            scroll-snap-align: start;
+            background: var(--bg-card);
+            border-radius: 0px;
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            transition: var(--transition-smooth);
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .review-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 0;
+            background: var(--accent);
+            transition: height 0.35s ease;
+        }
+        .review-card:hover::after {
+            height: 70px;
+        }
+        .review-card:hover {
+            border-color: var(--border-active);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+        }
+        .review-card-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            flex-shrink: 0;
+            filter: grayscale(30%) contrast(1.05);
+            transition: var(--transition-out);
+        }
+        .review-card:hover .review-card-image {
+            filter: grayscale(0%) contrast(1.1);
+        }
+        .review-card-body {
+            padding: 20px 18px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+            border-top: 1px solid var(--border-subtle);
+        }
+        .review-stars {
+            color: var(--accent);
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            font-family: var(--font-mono);
+        }
+        .review-card-body h4 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--white-soft);
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        .review-card-body p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            flex: 1;
+            font-weight: 350;
+        }
+        .review-card-body .review-author {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .reviews-nav {
+            display: flex;
+            gap: 16px;
+            margin-top: 18px;
+            padding: 0 40px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .reviews-nav button {
+            width: 44px;
+            height: 44px;
+            border-radius: 0px;
+            border: 1px solid var(--border-active);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-family: var(--font-mono);
+        }
+        .reviews-nav button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--bg-card-hover);
+            box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.08);
+        }
+
+        /* 4. About — модульная сетка */
+        .about {
+            padding: 90px 40px;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .about-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 70px;
+            align-items: start;
+        }
+        .about-text .label {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-weight: 500;
+            display: inline-block;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 6px;
+        }
+        .about-text h2 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+            letter-spacing: -0.03em;
+            color: var(--white-soft);
+            line-height: 1.15;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+        }
+        .about-text p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.75;
+            margin-bottom: 26px;
+            font-weight: 350;
+        }
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 0px;
+            padding: 26px 20px;
+            text-align: left;
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            height: 2px;
+            background: transparent;
+            transition: var(--transition-smooth);
+        }
+        .stat-item:hover::before {
+            background: var(--accent);
+        }
+        .stat-item:hover {
+            border-color: var(--border-active);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        }
+        .stat-number {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 2.4rem;
+            color: var(--accent);
+            letter-spacing: -0.04em;
+            line-height: 1;
+        }
+        .stat-label {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .about-image-wrapper {
+            position: relative;
+            border-radius: 0px;
+            overflow: hidden;
+            aspect-ratio: 4/5;
+            border: 1px solid var(--border-subtle);
+            filter: grayscale(25%);
+            transition: var(--transition-out);
+        }
+        .about-image-wrapper:hover {
+            filter: grayscale(0%);
+        }
+        .about-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-out);
+        }
+        .about-image-wrapper:hover img {
+            transform: scale(1.03);
+        }
+        .about-image-badge {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(8, 9, 11, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 0;
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-subtle);
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.78rem;
+            color: var(--white-soft);
+            letter-spacing: 0.05em;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+        }
+
+        /* 5. Projects — структурные карты */
+        .projects {
+            padding: 90px 40px;
+            background: var(--bg-deep);
+        }
+        .projects-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 48px;
+        }
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 0px;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .project-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            transform: translateY(-4px);
+        }
+        .project-card.featured {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent);
+        }
+        .project-card-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 2;
+            background: var(--accent);
+            color: #0d0f13;
+            font-weight: 600;
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 7px 16px;
+            border-radius: 0;
+            font-family: var(--font-mono);
+            border-bottom-left-radius: 2px;
+        }
+        .project-card-image {
+            width: 100%;
+            height: 230px;
+            object-fit: cover;
+            flex-shrink: 0;
+            transition: var(--transition-out);
+            filter: contrast(1.05) brightness(0.95);
+        }
+        .project-card:hover .project-card-image {
+            transform: scale(1.04);
+            filter: contrast(1.1) brightness(1);
+        }
+        .project-card-body {
+            padding: 22px 18px 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+            border-top: 1px solid var(--border-subtle);
+        }
+        .project-card-body h3 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 1.15rem;
+            letter-spacing: -0.02em;
+            color: var(--white-soft);
+            text-transform: uppercase;
+        }
+        .project-card-body .project-price {
+            font-family: var(--font-mono);
+            font-weight: 500;
+            font-size: 1.5rem;
+            color: var(--accent);
+            letter-spacing: -0.03em;
+        }
+        .project-card-body .project-price span {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
+        }
+        .project-card-body ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            flex: 1;
+        }
+        .project-card-body ul li {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding-left: 16px;
+            position: relative;
+            font-weight: 350;
+        }
+        .project-card-body ul li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.7rem;
+            top: 2px;
+        }
+        .project-card .btn-primary {
+            display: block;
+            text-align: center;
+            margin-top: 4px;
+            width: 100%;
+            border-radius: 0;
+        }
+
+        /* 6. CTA — строгий финал */
+        .cta-preview {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            overflow: hidden;
+            padding-left: 8vw;
+        }
+        .cta-preview .hero-bg img {
+            filter: brightness(0.25) saturate(0.4) contrast(1.2);
+        }
+        .cta-preview .hero-overlay {
+            background: linear-gradient(135deg, rgba(8, 9, 11, 0.92) 0%, rgba(8, 9, 11, 0.25) 60%, rgba(8, 9, 11, 0.8) 100%);
+        }
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            text-align: left;
+            max-width: 600px;
+            padding: 0 28px;
+            animation: fadeUp 1s 0.2s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            border-left: 2px solid var(--accent);
+            padding-left: 36px;
+        }
+        .cta-content .hero-tag {
+            margin-bottom: 18px;
+        }
+        .cta-content h2 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            letter-spacing: -0.04em;
+            color: var(--white-soft);
+            line-height: 1.1;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+        .cta-content p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            font-weight: 350;
+        }
+        .cta-form {
+            display: flex;
+            gap: 0;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            max-width: 480px;
+            margin: 0;
+        }
+        .cta-form input {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px 18px;
+            border-radius: 0px;
+            border: 1px solid var(--border-active);
+            background: rgba(13, 15, 19, 0.8);
+            color: var(--white-soft);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            backdrop-filter: blur(8px);
+            transition: var(--transition-smooth);
+            outline: none;
+            letter-spacing: 0.04em;
+            border-right: none;
+        }
+        .cta-form input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.08);
+            background: rgba(13, 15, 19, 0.95);
+        }
+        .cta-form input::placeholder {
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+        }
+        .cta-form .btn-primary {
+            border-radius: 0;
+            min-width: auto;
+            flex-shrink: 0;
+        }
+
+        .footer {
+            padding: 36px 40px;
+            text-align: left;
+            border-top: 1px solid var(--border-subtle);
+            background: var(--bg-deep);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .footer p {
+            color: var(--text-muted);
+            font-size: 0.68rem;
+            letter-spacing: 0.06em;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+        }
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: var(--transition-fast);
+        }
+        .footer a:hover {
+            border-bottom-color: var(--accent);
+        }
+
+        @media (max-width: 1024px) {
+            .hero {
+                padding-left: 5vw;
+            }
+            .hero-content {
+                border-left: 2px solid var(--accent);
+                padding-left: 28px;
+            }
+            .about-inner {
+                grid-template-columns: 1fr;
+                gap: 45px;
+            }
+            .about-image-wrapper {
+                aspect-ratio: 16/10;
+                order: -1;
+            }
+            .projects-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .projects-grid .project-card:last-child {
+                grid-column: 1 / -1;
+                max-width: 400px;
+                justify-self: center;
+            }
+            .review-card {
+                flex: 0 0 280px;
+                min-width: 250px;
+            }
+            .cta-preview {
+                padding-left: 5vw;
+            }
+            .cta-content {
+                border-left: 2px solid var(--accent);
+                padding-left: 28px;
+            }
+        }
+        @media (max-width: 768px) {
+            .nav {
+                padding: 12px 18px;
+            }
+            .nav.scrolled {
+                padding: 10px 18px;
+            }
+            .nav-logo {
+                font-size: 1.1rem;
+            }
+            .nav-cta {
+                font-size: 0.65rem;
+                padding: 7px 14px;
+            }
+            .hero {
+                padding-left: 4vw;
+                min-height: 95vh;
+            }
+            .hero-content {
+                border-left-width: 2px;
+                padding-left: 20px;
+                margin-left: 0;
+            }
+            .hero h1 {
+                font-size: clamp(1.8rem, 7vw, 2.8rem);
+            }
+            .hero p {
+                font-size: 0.82rem;
+            }
+            .btn-primary,
+            .btn-outline {
+                font-size: 0.7rem;
+                padding: 12px 20px;
+            }
+            .partners-track {
+                gap: 40px;
+                animation-duration: 22s;
+            }
+            .partner-logo {
+                font-size: 1.1rem;
+            }
+            .reviews-scroll-container {
+                padding: 0 18px;
+            }
+            .reviews-nav {
+                padding: 0 18px;
+            }
+            .review-card {
+                flex: 0 0 250px;
+                min-width: 220px;
+            }
+            .review-card-image {
+                height: 160px;
+            }
+            .section-header {
+                padding: 0 18px;
+            }
+            .about {
+                padding: 55px 18px;
+            }
+            .about-stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .stat-number {
+                font-size: 1.8rem;
+            }
+            .projects {
+                padding: 55px 18px;
+            }
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            .projects-grid .project-card:last-child {
+                grid-column: auto;
+                max-width: none;
+                justify-self: auto;
+            }
+            .project-card-image {
+                height: 190px;
+            }
+            .cta-preview {
+                padding-left: 4vw;
+                min-height: 75vh;
+            }
+            .cta-content {
+                border-left-width: 2px;
+                padding-left: 20px;
+            }
+            .cta-content h2 {
+                font-size: clamp(1.5rem, 6vw, 2.2rem);
+            }
+            .cta-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .cta-form input {
+                width: 100%;
+                min-width: auto;
+                border-right: 1px solid var(--border-active);
+            }
+            .cta-form .btn-primary {
+                width: 100%;
+            }
+            .hero-scroll-indicator {
+                bottom: 18px;
+                left: 4vw;
+            }
+            .footer {
+                padding: 28px 18px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero-content {
+                padding-left: 16px;
+                border-left-width: 2px;
+            }
+            .review-card {
+                flex: 0 0 210px;
+                min-width: 190px;
+            }
+            .review-card-image {
+                height: 130px;
+            }
+            .review-card-body {
+                padding: 14px 12px 16px;
+            }
+            .review-card-body h4 {
+                font-size: 0.9rem;
+            }
+            .review-card-body p {
+                font-size: 0.72rem;
+            }
+            .nav-logo {
+                font-size: 1rem;
+            }
+            .btn-primary,
+            .btn-outline {
+                padding: 11px 18px;
+                font-size: 0.7rem;
+            }
+            .cta-content {
+                padding-left: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav scrolled" id="nav">
+        <a href="#" class="nav-logo">ARCH<span>FORM</span></a>
+        <a href="#cta" class="nav-cta">Консультация</a>
+    </nav>
+
+    <!-- 1. Hero Preview -->
+    <section class="section hero" id="hero">
+        <div class="hero-bg" style="background: linear-gradient(160deg, #0d0f13 0%, #1a1e28 50%, #0d0f13 100%);">
+            <img src="deepseek_html_20260425_0af01a(1)_files/pexels-photo-323774.htm" alt="Современный особняк" loading="eager" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(160deg, #0d0f13 0%, #1a1e28 50%, #0d0f13 100%)';" style="display: none;">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-tag">Архитектурное бюро</span>
+            <h1>Проекты, <em>которые вдохновляют</em></h1>
+            <p>Создаём индивидуальные архитектурные решения для тех, кто ценит стиль, комфорт и безупречное качество.</p>
+            <div class="hero-buttons">
+                <a href="#projects" class="btn-primary">Смотреть проекты</a>
+                <a href="#cta" class="btn-outline">Связаться</a>
+            </div>
+        </div>
+        <div class="hero-scroll-indicator">
+            <span>Листайте вниз</span>
+            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+    </section>
+
+    <!-- 2. Partners -->
+    <section class="section partners" id="partners">
+        <p class="partners-label">Нам доверяют лидеры индустрии</p>
+        <div class="partners-track-wrapper">
+            <div class="partners-track" id="partnersTrack">
+                <span class="partner-logo lg">LG</span>
+                <span class="partner-logo samsung">SAMSUNG</span>
+                <span class="partner-logo nvidia">NVIDIA</span>
+                <span class="partner-logo intel">intel</span>
+                <span class="partner-logo apple">Apple</span>
+                <span class="partner-logo microsoft">Microsoft</span>
+                <span class="partner-logo tesla">TESLA</span>
+                <span class="partner-logo sony">SONY</span>
+                <span class="partner-logo amazon">amazon</span>
+                <span class="partner-logo google">Google</span>
+                <span class="partner-logo lg">LG</span>
+                <span class="partner-logo samsung">SAMSUNG</span>
+                <span class="partner-logo nvidia">NVIDIA</span>
+                <span class="partner-logo intel">intel</span>
+                <span class="partner-logo apple">Apple</span>
+                <span class="partner-logo microsoft">Microsoft</span>
+                <span class="partner-logo tesla">TESLA</span>
+                <span class="partner-logo sony">SONY</span>
+                <span class="partner-logo amazon">amazon</span>
+                <span class="partner-logo google">Google</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Reviews Horizontal Scroll -->
+    <section class="section reviews-section" id="reviews">
+        <div class="section-header">
+            <p class="label">Отзывы клиентов</p>
+            <h2>Что говорят о наших проектах</h2>
+        </div>
+        <div class="reviews-scroll-container">
+            <div class="reviews-track" id="reviewsTrack">
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" alt="Современный дом" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/i.webp">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Современная вилла в Подмосковье</h4>
+                        <p>«Проект превзошёл ожидания. Архитекторы учли каждую мелочь, а результат говорит сам за себя.»</p>
+                        <span class="review-author">— Дмитрий К., IT-директор</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" alt="Дом в стиле хай-тек" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/i_002.webp">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Особняк в стиле хай-тек</h4>
+                        <p>«Искали нестандартное решение — получили шедевр. Друзья до сих пор спрашивают, кто проектировал.»</p>
+                        <span class="review-author">— Анна С., предприниматель</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" alt="Загородный дом" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/vid-1-3-1024x576.jpg">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Загородный дом с террасой</h4>
+                        <p>«Сроки соблюдены, бюджет прозрачный, качество — на высоте. Рекомендую всем знакомым.»</p>
+                        <span class="review-author">— Сергей М., инвестор</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" alt="Коттедж" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/i_003.webp">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Коттедж в скандинавском стиле</h4>
+                        <p>«Минимализм и функциональность — именно то, что мы хотели. Команда поняла задачу с полуслова.»</p>
+                        <span class="review-author">— Ольга В., дизайнер</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" alt="Резиденция" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/4102e7934aa6d919a8871bcaca380ebb.jpg">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Резиденция у озера</h4>
+                        <p>«Вид из панорамных окон — просто фантастика. Проект идеально вписан в ландшафт.»</p>
+                        <span class="review-author">— Павел Р., топ-менеджер</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E" alt="Особняк" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Классический особняк</h4>
+                        <p>«Элегантность и статус в каждой детали. Благодарен команде за профессионализм.»</p>
+                        <span class="review-author">— Виктор А., адвокат</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E" alt="Стеклянный дом" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Стеклянный дом в лесу</h4>
+                        <p>«Природа и архитектура слились воедино. Это не просто дом — это произведение искусства.»</p>
+                        <span class="review-author">— Мария Л., галерист</span>
+                    </div>
+                </div>
+                <div class="review-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="review-card-image" src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E" alt="Горное шале" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22340%22 height=%22220%22%3E%3Crect fill=%22%2313161c%22 width=%22340%22 height=%22220%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 fill=%22%236b6f7a%22 text-anchor=%22middle%22 dy=%22.3em%22%3EИзображение%3C/text%3E%3C/svg%3E';">
+                    <div class="review-card-body">
+                        <div class="review-stars">★★★★★</div>
+                        <h4>Горное шале</h4>
+                        <p>«Уют и тепло в каждой комнате. При этом — передовые инженерные решения и умный дом.»</p>
+                        <span class="review-author">— Алексей Н., разработчик</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="reviews-nav">
+            <button id="reviewsPrev" aria-label="Назад">←</button>
+            <button id="reviewsNext" aria-label="Вперёд">→</button>
+        </div>
+    </section>
+
+    <!-- 4. About Us -->
+    <section class="section about" id="about">
+        <div class="about-inner" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+            <div class="about-text">
+                <p class="label">О компании</p>
+                <h2>Почему выбирают именно нас</h2>
+                <p>Мы — команда архитекторов, инженеров и дизайнеров с безупречной репутацией. Более 12 лет создаём проекты, которые становятся эталоном качества. Наш подход сочетает инновационные технологии, экологичные материалы и индивидуальный дизайн.</p>
+                <div class="about-stats">
+                    <div class="stat-item" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);"><div class="stat-number">350+</div><div class="stat-label">Реализованных проектов</div></div>
+                    <div class="stat-item" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);"><div class="stat-number">12</div><div class="stat-label">Лет на рынке</div></div>
+                    <div class="stat-item" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);"><div class="stat-number">98%</div><div class="stat-label">Довольных клиентов</div></div>
+                    <div class="stat-item" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);"><div class="stat-number">24/7</div><div class="stat-label">Поддержка</div></div>
+                </div>
+            </div>
+            <div class="about-image-wrapper" style="background: linear-gradient(160deg, #13161c 0%, #1e2230 100%);">
+                <img alt="Команда ARCHFORM" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(160deg, #13161c 0%, #1e2230 100%)';" style="display: none;" src="deepseek_html_20260425_0af01a(1)_files/scale_1200.png">
+                <div class="about-image-badge">⭐ Премиум-качество с 2013 года</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Project Type Cards -->
+    <section class="section projects" id="projects">
+        <div class="projects-inner">
+            <div class="section-header" style="padding:0;text-align:left;">
+                <p class="label">Наши проекты</p>
+                <h2>Три формата для любых задач</h2>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="project-card-image" alt="Базовый проект" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22380%22 height=%22240%22%3E%3Crect fill=%22%2313161c%22 width=%22380%22 height=%22240%22/%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/a0950852c20e541fd9bf26ad49fd066b.jpg">
+                    <div class="project-card-body">
+                        <h3>«Стандарт»</h3>
+                        <div class="project-price">от 85 000 ₽<span> / проект</span></div>
+                        <ul>
+                            <li>Готовый архитектурный проект</li>
+                            <li>3D-визуализация фасадов</li>
+                            <li>Базовые планировки этажей</li>
+                            <li>Смета материалов</li>
+                        </ul>
+                        <a href="#cta" class="btn-primary">Выбрать</a>
+                    </div>
+                </div>
+                <div class="project-card featured" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <span class="project-card-badge">Популярный</span>
+                    <img class="project-card-image" alt="Бизнес проект" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22380%22 height=%22240%22%3E%3Crect fill=%22%2313161c%22 width=%22380%22 height=%22240%22/%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/5b0982af550d0bc704018d9790e5a96d.png">
+                    <div class="project-card-body">
+                        <h3>«Бизнес»</h3>
+                        <div class="project-price">от 195 000 ₽<span> / проект</span></div>
+                        <ul>
+                            <li>Индивидуальное проектирование</li>
+                            <li>Полная 3D-визуализация</li>
+                            <li>Дизайн интерьера (концепция)</li>
+                            <li>Инженерные сети и расчёты</li>
+                            <li>Авторский надзор (3 мес.)</li>
+                        </ul>
+                        <a href="#cta" class="btn-primary">Выбрать</a>
+                    </div>
+                </div>
+                <div class="project-card" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <img class="project-card-image" alt="Премиум проект" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22380%22 height=%22240%22%3E%3Crect fill=%22%2313161c%22 width=%22380%22 height=%22240%22/%3E%3C/svg%3E';" src="deepseek_html_20260425_0af01a(1)_files/09cce831688f74f0072d3a52f76b3c91.jpg">
+                    <div class="project-card-body">
+                        <h3>«Премиум»</h3>
+                        <div class="project-price">от 450 000 ₽<span> / проект</span></div>
+                        <ul>
+                            <li>Эксклюзивный дизайн-проект</li>
+                            <li>Фотореалистичная визуализация</li>
+                            <li>Полный дизайн интерьера</li>
+                            <li>Ландшафтное проектирование</li>
+                            <li>Умный дом и автоматизация</li>
+                            <li>Авторский надзор (12 мес.)</li>
+                        </ul>
+                        <a href="#cta" class="btn-primary">Выбрать</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. CTA Preview -->
+    <section class="section cta-preview" id="cta">
+        <div class="hero-bg" style="background: linear-gradient(160deg, #0d0f13 0%, #1a1e28 50%, #0d0f13 100%);">
+            <img src="deepseek_html_20260425_0af01a(1)_files/pexels-photo-258154.htm" alt="Премиальный особняк" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(160deg, #0d0f13 0%, #1a1e28 50%, #0d0f13 100%)';" style="display: none;">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="cta-content" style="opacity: 1; transform: translateY(0px); transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);">
+            <span class="hero-tag">Начните сегодня</span>
+            <h2>Ваш идеальный дом — <em style="color:var(--accent);font-style:normal;">наша миссия</em></h2>
+            <p>Оставьте заявку, и мы свяжемся с вами в течение 30 минут для бесплатной консультации.</p>
+            <div class="cta-form">
+                <input type="tel" placeholder="+7 (___) ___-__-__" aria-label="Телефон">
+                <button class="btn-primary" onclick="alert('Спасибо! Мы свяжемся с вами в ближайшее время.')">Отправить заявку</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© 2026 <a href="#">ARCHFORM</a>. Все права защищены.</p>
+        <p>Проектная документация соответствует ГОСТ.</p>
+    </footer>
+
+    <script>
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 80);
+        }, { passive: true });
+
+        const reviewsTrack = document.getElementById('reviewsTrack');
+        const prevBtn = document.getElementById('reviewsPrev');
+        const nextBtn = document.getElementById('reviewsNext');
+
+        const scrollReviewsBy = (direction) => {
+            const card = reviewsTrack.querySelector('.review-card');
+            if (!card) return;
+            const width = card.offsetWidth + 16;
+            const scrollAmount = width * (window.innerWidth < 768 ? 1 : 2);
+            reviewsTrack.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        };
+
+        prevBtn.addEventListener('click', () => scrollReviewsBy(-1));
+        nextBtn.addEventListener('click', () => scrollReviewsBy(1));
+
+        let isDown = false,
+            startX, scrollLeft;
+        reviewsTrack.addEventListener('mousedown', e => {
+            isDown = true;
+            reviewsTrack.classList.add('dragging');
+            startX = e.pageX - reviewsTrack.offsetLeft;
+            scrollLeft = reviewsTrack.scrollLeft;
+        });
+        reviewsTrack.addEventListener('mouseleave', () => { isDown = false;
+            reviewsTrack.classList.remove('dragging'); });
+        reviewsTrack.addEventListener('mouseup', () => { isDown = false;
+            reviewsTrack.classList.remove('dragging'); });
+        reviewsTrack.addEventListener('mousemove', e => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - reviewsTrack.offsetLeft;
+            reviewsTrack.scrollLeft = scrollLeft - (x - startX) * 1.6;
+        });
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { rootMargin: '0px 0px -50px 0px', threshold: 0.1 });
+
+        document.querySelectorAll('.about-inner, .projects-grid .project-card, .stat-item, .review-card, .cta-content').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
+            revealObserver.observe(el);
+        });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') scrollReviewsBy(-1);
+            if (e.key === 'ArrowRight') scrollReviewsBy(1);
+        });
+
+        console.log('%c🏗️ ARCHFORM — Минималистичный рендер %c| %cАрхитектурный подход',
+            'color: #c9a96e; font-weight: bold; font-size: 1.1em;', '', 'color: #b0b4bd;');
+        console.log('%cВсе элементы переосмыслены в духе строгой геометрии.', 'color: #6b6f7a;');
+    </script>
+</body>
+</html>
