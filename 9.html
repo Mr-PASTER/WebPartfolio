@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Nerd | Профиль Дата-Сайентиста</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --surface-light: #1c2333;
+            --teal: #00ffcc;
+            --teal-dim: rgba(0, 255, 204, 0.3);
+            --teal-glow: rgba(0, 255, 204, 0.6);
+            --purple: #a855f7;
+            --purple-dim: rgba(168, 85, 247, 0.3);
+            --purple-glow: rgba(168, 85, 247, 0.5);
+            --text: #e6edf3;
+            --text-dim: #8b949e;
+            --grid-color: rgba(0, 255, 204, 0.06);
+            --grid-color-bright: rgba(0, 255, 204, 0.12);
+            --border: rgba(0, 255, 204, 0.2);
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --success: #2ed573;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-mono: 'Source Code Pro', monospace;
+            --glitch-offset: 2px;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-display);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Матричная сетка фона ── */
+        .matrix-grid {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.7;
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(ellipse 70% 60% at 50% 35%, black 30%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 35%, black 30%, transparent 70%);
+        }
+
+        .matrix-grid::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--grid-color-bright) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color-bright) 1px, transparent 1px);
+            background-size: 120px 120px;
+            mask-image: radial-gradient(ellipse 50% 40% at 50% 30%, black 20%, transparent 55%);
+            -webkit-mask-image: radial-gradient(ellipse 50% 40% at 50% 30%, black 20%, transparent 55%);
+        }
+
+        /* ── Строки сканирования ── */
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.03;
+            background: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 3px,
+                    rgba(0, 255, 204, 0.4) 3px,
+                    rgba(0, 255, 204, 0.4) 4px);
+        }
+
+        /* ── Основной контейнер ── */
+        .dashboard {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 20px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* ── Хедер / Герой ── */
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 28px;
+            padding: 32px 36px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0, 255, 204, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -30%;
+            width: 80%;
+            height: 200%;
+            background: radial-gradient(ellipse, rgba(0, 255, 204, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: var(--surface-light);
+            border: 2px solid var(--teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 30px var(--teal-dim), 0 0 60px rgba(0, 255, 204, 0.15);
+            animation: avatarPulse 4s ease-in-out infinite;
+            overflow: hidden;
+        }
+
+        .hero-avatar .avatar-icon {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: var(--teal);
+            letter-spacing: -2px;
+        }
+
+        @keyframes avatarPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 30px var(--teal-dim), 0 0 60px rgba(0, 255, 204, 0.15);
+            }
+            50% {
+                box-shadow: 0 0 45px var(--teal-glow), 0 0 90px rgba(0, 255, 204, 0.25);
+            }
+        }
+
+        .hero-info {
+            flex: 1;
+            min-width: 220px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── Глитч-эффект имени ── */
+        .glitch-name {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: #fff;
+            position: relative;
+            display: inline-block;
+            letter-spacing: -0.02em;
+            text-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+            cursor: default;
+            user-select: none;
+        }
+
+        .glitch-name::before,
+        .glitch-name::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .glitch-name::before {
+            color: var(--teal);
+            animation: glitchTop 2.5s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+            z-index: 1;
+        }
+
+        .glitch-name::after {
+            color: var(--purple);
+            animation: glitchBottom 2.5s infinite;
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+            z-index: 1;
+        }
+
+        @keyframes glitchTop {
+            0%,
+            90%,
+            100% {
+                opacity: 0;
+                transform: translate(0, 0);
+            }
+            91% {
+                opacity: 0.7;
+                transform: translate(-3px, -1px);
+            }
+            93% {
+                opacity: 0.5;
+                transform: translate(2px, 1px);
+            }
+            95% {
+                opacity: 0;
+                transform: translate(0, 0);
+            }
+        }
+
+        @keyframes glitchBottom {
+            0%,
+            90%,
+            100% {
+                opacity: 0;
+                transform: translate(0, 0);
+            }
+            92% {
+                opacity: 0.6;
+                transform: translate(3px, 1px);
+            }
+            94% {
+                opacity: 0.4;
+                transform: translate(-2px, -1px);
+            }
+            96% {
+                opacity: 0;
+                transform: translate(0, 0);
+            }
+        }
+
+        .hero-title {
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            color: var(--teal);
+            margin-top: 4px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 5px 14px;
+            border: 1px solid var(--purple);
+            border-radius: 20px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--purple);
+            background: rgba(168, 85, 247, 0.08);
+            letter-spacing: 0.04em;
+            animation: badgeGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes badgeGlow {
+            0%,
+            100% {
+                box-shadow: 0 0 8px rgba(168, 85, 247, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+            }
+        }
+
+        /* ── Статистика ── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 20px 18px;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        .stat-card:hover {
+            border-color: var(--teal);
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.1), inset 0 1px 0 rgba(0, 255, 204, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--teal), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover::after {
+            opacity: 1;
+        }
+
+        .stat-value {
+            font-family: var(--font-mono);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--teal);
+            text-shadow: 0 0 15px var(--teal-dim);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 6px;
+        }
+
+        .stat-sub {
+            font-size: 0.7rem;
+            color: var(--success);
+            font-family: var(--font-mono);
+            margin-top: 3px;
+        }
+
+        /* ── Секция навыков ── */
+        .skills-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .skills-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.03);
+        }
+
+        .panel-title {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--teal);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-title::before {
+            content: '◆';
+            font-size: 0.5rem;
+            animation: blink 1.5s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.2;
+            }
+        }
+
+        /* ── Круговые диаграммы ── */
+        .circular-charts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            justify-items: center;
+        }
+
+        .circular-skill {
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .circular-skill:hover {
+            transform: scale(1.06);
+            filter: drop-shadow(0 0 18px var(--teal-glow));
+        }
+
+        .circular-skill svg {
+            width: 90px;
+            height: 90px;
+            transform: rotate(-90deg);
+        }
+
+        .circular-skill .bg-circle {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.06);
+            stroke-width: 7;
+        }
+
+        .circular-skill .fg-circle {
+            fill: none;
+            stroke: var(--teal);
+            stroke-width: 7;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .circular-skill.animated .fg-circle {
+            stroke-dashoffset: var(--target-offset);
+        }
+
+        .circular-skill .skill-percent {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fff;
+            pointer-events: none;
+            text-shadow: 0 0 10px var(--teal-dim);
+        }
+
+        .circular-skill .skill-label {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            margin-top: 8px;
+            text-align: center;
+            letter-spacing: 0.03em;
+            transition: var(--transition);
+        }
+
+        .circular-skill:hover .skill-label {
+            color: var(--teal);
+        }
+
+        /* ── Бары навыков ── */
+        .skill-bars-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .skill-bar-item {
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .skill-bar-item:hover .skill-bar-fill {
+            box-shadow: 0 0 20px var(--teal-glow);
+        }
+
+        .skill-bar-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.04em;
+        }
+
+        .skill-bar-name {
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .skill-bar-item:hover .skill-bar-name {
+            color: var(--teal);
+        }
+
+        .skill-bar-value {
+            color: var(--teal);
+            font-weight: 600;
+        }
+
+        .skill-bar-track {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .skill-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--teal), var(--purple));
+            width: 0%;
+            transition: width 1.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            position: relative;
+        }
+
+        .skill-bar-fill.animated-bar {
+            width: var(--bar-width);
+        }
+
+        .skill-bar-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            animation: barShine 2s ease-in-out infinite;
+        }
+
+        @keyframes barShine {
+            0%,
+            100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        /* ── Секция GitHub ── */
+        .github-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .github-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.03);
+        }
+
+        .contribution-grid {
+            display: flex;
+            gap: 2px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            max-width: 100%;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .contrib-cell {
+            width: 11px;
+            height: 11px;
+            border-radius: 2px;
+            transition: var(--transition);
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .contrib-cell:hover {
+            transform: scale(1.7);
+            z-index: 5;
+            box-shadow: 0 0 10px var(--teal-glow);
+            border: 1px solid var(--teal);
+        }
+
+        .contrib-cell[data-level="0"] {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .contrib-cell[data-level="1"] {
+            background: rgba(0, 255, 204, 0.2);
+        }
+        .contrib-cell[data-level="2"] {
+            background: rgba(0, 255, 204, 0.4);
+        }
+        .contrib-cell[data-level="3"] {
+            background: rgba(0, 255, 204, 0.65);
+        }
+        .contrib-cell[data-level="4"] {
+            background: rgba(0, 255, 204, 0.9);
+            box-shadow: 0 0 6px var(--teal-dim);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 220px;
+        }
+
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* ── Форма найма ── */
+        .hire-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            box-shadow: 0 0 40px rgba(0, 255, 204, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hire-section::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -80px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hire-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hire-form .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-dim);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            background: var(--surface-light);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 12px 14px;
+            color: var(--text);
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            transition: var(--transition);
+            outline: none;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 15px var(--teal-dim), inset 0 0 8px rgba(0, 255, 204, 0.05);
+            background: #1a2332;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+        }
+
+        .neon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 32px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #000;
+            background: var(--teal);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 0 0 25px var(--teal-dim), 0 0 50px rgba(0, 255, 204, 0.2);
+            animation: btnPulse 3s ease-in-out infinite;
+        }
+
+        .neon-btn:hover {
+            box-shadow: 0 0 40px var(--teal-glow), 0 0 80px rgba(0, 255, 204, 0.35);
+            transform: translateY(-2px);
+            background: #33ffd9;
+        }
+
+        .neon-btn:active {
+            transform: scale(0.96);
+            transition: transform 0.1s;
+        }
+
+        .neon-btn::after {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -80%;
+            width: 50%;
+            height: 220%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(25deg);
+            transition: left 0.6s;
+        }
+
+        .neon-btn:hover::after {
+            left: 120%;
+        }
+
+        @keyframes btnPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 25px var(--teal-dim), 0 0 50px rgba(0, 255, 204, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 35px var(--teal-glow), 0 0 70px rgba(0, 255, 204, 0.3);
+            }
+        }
+
+        /* ── Тултип ── */
+        .tooltip-overlay {
+            position: fixed;
+            pointer-events: none;
+            z-index: 999;
+            background: #0d1117;
+            border: 1px solid var(--teal);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text);
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s, transform 0.2s;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7), 0 0 20px var(--teal-dim);
+            max-width: 240px;
+            backdrop-filter: blur(10px);
+            line-height: 1.6;
+        }
+        .tooltip-overlay.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .tooltip-overlay .tt-name {
+            color: var(--teal);
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+            letter-spacing: 0.03em;
+        }
+        .tooltip-overlay .tt-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            color: var(--text-dim);
+            font-size: 0.65rem;
+        }
+        .tooltip-overlay .tt-row span:last-child {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        /* ── Адаптив ── */
+        @media (max-width: 968px) {
+            .skills-section {
+                grid-template-columns: 1fr;
+            }
+            .github-section {
+                grid-template-columns: 1fr;
+            }
+            .hire-form {
+                grid-template-columns: 1fr;
+            }
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .circular-charts {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            .circular-skill svg {
+                width: 70px;
+                height: 70px;
+            }
+            .circular-skill .skill-percent {
+                font-size: 0.7rem;
+            }
+            .hero {
+                padding: 20px;
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero-avatar {
+                width: 70px;
+                height: 70px;
+                font-size: 30px;
+            }
+        }
+
+        @media (max-width: 540px) {
+            .dashboard {
+                padding: 12px 8px 40px;
+                gap: 16px;
+            }
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .stat-card {
+                padding: 14px 10px;
+            }
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            .circular-charts {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .circular-skill svg {
+                width: 60px;
+                height: 60px;
+            }
+            .circular-skill .fg-circle {
+                stroke-width: 5;
+            }
+            .circular-skill .bg-circle {
+                stroke-width: 5;
+            }
+            .skills-panel {
+                padding: 16px 12px;
+            }
+            .contribution-grid {
+                gap: 1px;
+            }
+            .contrib-cell {
+                width: 8px;
+                height: 8px;
+            }
+            .hero {
+                padding: 16px;
+                gap: 12px;
+            }
+            .glitch-name {
+                font-size: 1.5rem;
+            }
+            .neon-btn {
+                width: 100%;
+                font-size: 0.75rem;
+                padding: 12px 20px;
+            }
+            .chart-container {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Фоновые эффекты -->
+    <div class="matrix-grid"></div>
+    <div class="scanlines"></div>
+
+    <!-- Тултип -->
+    <div class="tooltip-overlay" id="tooltip"></div>
+
+    <!-- Дашборд -->
+    <main class="dashboard">
+
+        <!-- Хедер -->
+        <header class="hero">
+            <div class="hero-avatar">
+                <span class="avatar-icon">DN</span>
+            </div>
+            <div class="hero-info">
+                <h1 class="glitch-name" data-text="ALEX REZNIKOV">ALEX REZNIKOV</h1>
+                <p class="hero-title">Senior Data Scientist / ML Engineer</p>
+                <span class="hero-badge">🔬 Deep Learning Specialist</span>
+            </div>
+        </header>
+
+        <!-- Статистика -->
+        <section class="stats-row">
+            <div class="stat-card">
+                <div class="stat-value" data-count="247">0</div>
+                <div class="stat-label">Проектов</div>
+                <div class="stat-sub">▲ 12% за год</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" data-count="98.7">0</div>
+                <div class="stat-label">% Точности</div>
+                <div class="stat-sub">● Средняя по ML</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" data-count="3847">0</div>
+                <div class="stat-label">Коммитов</div>
+                <div class="stat-sub">▲ 23% за квартал</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" data-count="9.4">0</div>
+                <div class="stat-label">Лет опыта</div>
+                <div class="stat-sub">● Data Science</div>
+            </div>
+        </section>
+
+        <!-- Навыки: круговые + бары -->
+        <section class="skills-section">
+            <!-- Круговые диаграммы -->
+            <div class="skills-panel" id="circularPanel">
+                <h3 class="panel-title">Core Competencies</h3>
+                <div class="circular-charts" id="circularCharts">
+                    <!-- Заполняется JS -->
+                </div>
+            </div>
+
+            <!-- Бары навыков -->
+            <div class="skills-panel" id="barsPanel">
+                <h3 class="panel-title">Technical Stack</h3>
+                <div class="skill-bars-list" id="skillBarsList">
+                    <!-- Заполняется JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- GitHub: график коммитов + чарт -->
+        <section class="github-section">
+            <div class="github-panel">
+                <h3 class="panel-title">Commit Activity Matrix</h3>
+                <div class="contribution-grid" id="contribGrid">
+                    <!-- Заполняется JS -->
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:12px;font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim);">
+                    <span>Less</span>
+                    <span style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,0.03);"></span>
+                    <span style="width:10px;height:10px;border-radius:2px;background:rgba(0,255,204,0.2);"></span>
+                    <span style="width:10px;height:10px;border-radius:2px;background:rgba(0,255,204,0.4);"></span>
+                    <span style="width:10px;height:10px;border-radius:2px;background:rgba(0,255,204,0.65);"></span>
+                    <span style="width:10px;height:10px;border-radius:2px;background:rgba(0,255,204,0.9);"></span>
+                    <span>More</span>
+                </div>
+            </div>
+            <div class="github-panel">
+                <h3 class="panel-title">Activity Trend (12 Months)</h3>
+                <div class="chart-container">
+                    <canvas id="activityChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Форма найма -->
+        <section class="hire-section">
+            <h3 class="panel-title">Initiate Contact Protocol</h3>
+            <form class="hire-form" id="hireForm">
+                <div class="form-group">
+                    <label for="name">Имя / Компания</label>
+                    <input type="text" id="name" placeholder="Илон Маск" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="elon@neuralink.dev" required>
+                </div>
+                <div class="form-group">
+                    <label for="budget">Бюджет (USD)</label>
+                    <select id="budget">
+                        <option value="">Выбрать диапазон</option>
+                        <option value="10-30k">$10k – $30k</option>
+                        <option value="30-75k">$30k – $75k</option>
+                        <option value="75-150k">$75k – $150k</option>
+                        <option value="150k+">$150k+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="timeline">Сроки</label>
+                    <select id="timeline">
+                        <option value="">Выбрать</option>
+                        <option value="1mo">&lt; 1 месяц</option>
+                        <option value="1-3mo">1–3 месяца</option>
+                        <option value="3-6mo">3–6 месяцев</option>
+                        <option value="6mo+">6+ месяцев</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label for="message">Описание проекта</label>
+                    <textarea id="message" placeholder="Опишите задачу: данные, цели, ожидаемые метрики..."></textarea>
+                </div>
+                <div class="full-width" style="display:flex;justify-content:flex-end;">
+                    <button type="submit" class="neon-btn">
+                        <span>⟳</span> Нанять Специалиста
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        (function() {
+            // ─────────────────────────────────────
+            // ДАННЫЕ НАВЫКОВ
+            // ─────────────────────────────────────
+            const circularSkillsData = [
+                { name: 'Python', percent: 95, details: { experience: '8 лет', projects: '190+',
+                        stack: 'NumPy, Pandas, JAX' } },
+                { name: 'SQL/NoSQL', percent: 90, details: { experience: '7 лет', projects: '150+',
+                        stack: 'PostgreSQL, MongoDB, Redis' } },
+                { name: 'ML Models', percent: 88, details: { experience: '6 лет', projects: '120+',
+                        stack: 'XGBoost, LightGBM, CatBoost' } },
+                { name: 'Deep Learning', percent: 82, details: { experience: '5 лет', projects: '80+',
+                        stack: 'PyTorch, TensorFlow, Keras' } },
+                { name: 'Data Viz', percent: 85, details: { experience: '6 лет', projects: '200+',
+                        stack: 'D3.js, Plotly, Tableau' } },
+                { name: 'Statistics', percent: 87, details: { experience: '7 лет', projects: '160+',
+                        stack: 'A/B testing, Bayesian, Causal' } },
+            ];
+
+            const barSkillsData = [
+                { name: 'TensorFlow / Keras', percent: 90 },
+                { name: 'PyTorch', percent: 85 },
+                { name: 'Pandas / Polars', percent: 95 },
+                { name: 'Scikit-learn', percent: 88 },
+                { name: 'NLP / Transformers', percent: 78 },
+                { name: 'Computer Vision', percent: 72 },
+                { name: 'MLOps / Docker', percent: 80 },
+                { name: 'Spark / Big Data', percent: 75 },
+            ];
+
+            // ─────────────────────────────────────
+            // КРУГОВЫЕ ДИАГРАММЫ (SVG)
+            // ─────────────────────────────────────
+            const circularChartsContainer = document.getElementById('circularCharts');
+            const radius = 38;
+            const circumference = 2 * Math.PI * radius;
+
+            circularSkillsData.forEach((skill, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'circular-skill';
+                wrapper.setAttribute('data-skill-index', index);
+                wrapper.setAttribute('data-tooltip-type', 'circular');
+
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('viewBox', '0 0 90 90');
+                svg.setAttribute('width', '90');
+                svg.setAttribute('height', '90');
+
+                // Фоновый круг
+                const bgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                bgCircle.setAttribute('cx', '45');
+                bgCircle.setAttribute('cy', '45');
+                bgCircle.setAttribute('r', radius);
+                bgCircle.classList.add('bg-circle');
+                svg.appendChild(bgCircle);
+
+                // Передний круг
+                const fgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                fgCircle.setAttribute('cx', '45');
+                fgCircle.setAttribute('cy', '45');
+                fgCircle.setAttribute('r', radius);
+                fgCircle.classList.add('fg-circle');
+                fgCircle.style.strokeDasharray = circumference;
+                fgCircle.style.strokeDashoffset = circumference; // изначально скрыт
+                fgCircle.style.setProperty('--target-offset', circumference * (1 - skill.percent / 100));
+                svg.appendChild(fgCircle);
+
+                wrapper.appendChild(svg);
+
+                // Процент в центре
+                const percentSpan = document.createElement('span');
+                percentSpan.className = 'skill-percent';
+                percentSpan.textContent = skill.percent + '%';
+                wrapper.appendChild(percentSpan);
+
+                // Название
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'skill-label';
+                labelSpan.textContent = skill.name;
+                wrapper.appendChild(labelSpan);
+
+                // Сохраняем данные для тултипа
+                wrapper._tooltipData = {
+                    name: skill.name,
+                    percent: skill.percent,
+                    ...skill.details,
+                };
+
+                circularChartsContainer.appendChild(wrapper);
+            });
+
+            // ─────────────────────────────────────
+            // БАРЫ НАВЫКОВ
+            // ─────────────────────────────────────
+            const skillBarsList = document.getElementById('skillBarsList');
+            barSkillsData.forEach((skill, index) => {
+                const item = document.createElement('div');
+                item.className = 'skill-bar-item';
+                item.setAttribute('data-skill-index', index);
+                item.setAttribute('data-tooltip-type', 'bar');
+
+                const header = document.createElement('div');
+                header.className = 'skill-bar-header';
+                header.innerHTML = `
+                    <span class="skill-bar-name">${skill.name}</span>
+                    <span class="skill-bar-value">${skill.percent}%</span>
+                `;
+
+                const track = document.createElement('div');
+                track.className = 'skill-bar-track';
+                const fill = document.createElement('div');
+                fill.className = 'skill-bar-fill';
+                fill.style.setProperty('--bar-width', skill.percent + '%');
+                track.appendChild(fill);
+
+                item.appendChild(header);
+                item.appendChild(track);
+
+                // Данные для тултипа
+                item._tooltipData = {
+                    name: skill.name,
+                    percent: skill.percent,
+                    experience: Math.round(skill.percent / 12) + ' лет',
+                    projects: Math.round(skill.percent * 1.8) + '+',
+                    stack: 'См. полный стек в резюме',
+                };
+
+                skillBarsList.appendChild(item);
+            });
+
+            // ─────────────────────────────────────
+            // ГРИД КОММИТОВ (GitHub-style)
+            // ─────────────────────────────────────
+            const contribGrid = document.getElementById('contribGrid');
+            const totalWeeks = 52;
+            const daysPerWeek = 7;
+
+            // Генерация реалистичных данных
+            function generateContribData() {
+                const data = [];
+                const now = new Date();
+                for (let w = 0; w < totalWeeks; w++) {
+                    const weekData = [];
+                    for (let d = 0; d < daysPerWeek; d++) {
+                        // Более высокая активность в будни, меньше в выходные
+                        const dayFactor = (d === 0 || d === 6) ? 0.3 : 1.0;
+                        // Более высокая активность в последние недели
+                        const recencyFactor = 0.4 + 0.6 * (w / totalWeeks);
+                        // Случайный компонент
+                        const random = Math.random();
+                        let level = 0;
+                        const threshold = random * dayFactor * recencyFactor;
+                        if (threshold > 0.85) level = 4;
+                        else if (threshold > 0.7) level = 3;
+                        else if (threshold > 0.5) level = 2;
+                        else if (threshold > 0.25) level = 1;
+                        else level = 0;
+                        weekData.push(level);
+                    }
+                    data.push(weekData);
+                }
+                return data;
+            }
+
+            const contribData = generateContribData();
+
+            // Отрисовка (транспонируем: строки = дни недели, колонки = недели)
+            for (let day = 0; day < daysPerWeek; day++) {
+                for (let week = 0; week < totalWeeks; week++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'contrib-cell';
+                    const level = contribData[week][day];
+                    cell.setAttribute('data-level', level);
+                    cell.title = `Week ${week + 1}, Day ${day + 1}: ${level} commits`;
+                    contribGrid.appendChild(cell);
+                }
+            }
+
+            // ─────────────────────────────────────
+            // ЧАРТ АКТИВНОСТИ (Chart.js)
+            // ─────────────────────────────────────
+            const chartCtx = document.getElementById('activityChart').getContext('2d');
+            const months = [
+                'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт',
+                'Ноя', 'Дек', 'Янв', 'Фев', 'Мар', 'Апр'
+            ];
+            const activityData = [65, 72, 58, 81, 90, 78, 95, 88, 102, 85, 97, 110];
+
+            // Градиент для заливки
+            const gradientFill = chartCtx.createLinearGradient(0, 0, 0, 220);
+            gradientFill.addColorStop(0, 'rgba(0, 255, 204, 0.35)');
+            gradientFill.addColorStop(0.5, 'rgba(0, 255, 204, 0.08)');
+            gradientFill.addColorStop(1, 'rgba(0, 255, 204, 0.0)');
+
+            new Chart(chartCtx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Коммиты',
+                        data: activityData,
+                        borderColor: '#00ffcc',
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#00ffcc',
+                        pointBorderColor: '#0d1117',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 8,
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#00ffcc',
+                        fill: true,
+                        backgroundColor: gradientFill,
+                        tension: 0.4,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { intersect: false, mode: 'index' },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#0d1117',
+                            borderColor: '#00ffcc',
+                            borderWidth: 1,
+                            titleColor: '#00ffcc',
+                            bodyColor: '#e6edf3',
+                            titleFont: { family: "'Source Code Pro', monospace", size: 12 },
+                            bodyFont: { family: "'Source Code Pro', monospace", size: 11 },
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: false,
+                        },
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#8b949e', font: { family: "'Source Code Pro', monospace",
+                                    size: 10 } },
+                            grid: { color: 'rgba(0,255,204,0.06)', drawBorder: false },
+                            border: { display: false },
+                        },
+                        y: {
+                            ticks: { color: '#8b949e', font: { family: "'Source Code Pro', monospace",
+                                    size: 10 }, stepSize: 20 },
+                            grid: { color: 'rgba(0,255,204,0.06)', drawBorder: false },
+                            border: { display: false },
+                            beginAtZero: false,
+                            min: 40,
+                        },
+                    },
+                },
+            });
+
+            // ─────────────────────────────────────
+            // INTERSECTION OBSERVER (анимации при скролле)
+            // ─────────────────────────────────────
+            const observerOptions = { threshold: 0.3, rootMargin: '0px 0px -50px 0px' };
+
+            const observerCallback = (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Анимация круговых диаграмм
+                        if (entry.target.id === 'circularPanel') {
+                            const circles = entry.target.querySelectorAll('.circular-skill');
+                            circles.forEach((c, i) => {
+                                setTimeout(() => {
+                                    c.classList.add('animated');
+                                }, i * 100);
+                            });
+                        }
+                        // Анимация баров
+                        if (entry.target.id === 'barsPanel') {
+                            const fills = entry.target.querySelectorAll('.skill-bar-fill');
+                            fills.forEach((f, i) => {
+                                setTimeout(() => {
+                                    f.classList.add('animated-bar');
+                                }, i * 80);
+                            });
+                        }
+                        // Анимация счётчиков статистики
+                        if (entry.target.classList.contains('stats-row')) {
+                            animateCounters(entry.target);
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+
+            const observer = new IntersectionObserver(observerCallback, observerOptions);
+            observer.observe(document.getElementById('circularPanel'));
+            observer.observe(document.getElementById('barsPanel'));
+            observer.observe(document.querySelector('.stats-row'));
+
+            // ─────────────────────────────────────
+            // АНИМАЦИЯ СЧЁТЧИКОВ
+            // ─────────────────────────────────────
+            function animateCounters(statsRow) {
+                const counters = statsRow.querySelectorAll('.stat-value[data-count]');
+                counters.forEach(counter => {
+                    const target = parseFloat(counter.getAttribute('data-count'));
+                    const isFloat = target % 1 !== 0;
+                    const duration = 1800;
+                    const startTime = performance.now();
+                    const initialText = counter.textContent;
+
+                    function update(now) {
+                        const elapsed = now - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        // Easing
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        const current = target * eased;
+                        if (isFloat) {
+                            counter.textContent = current.toFixed(1);
+                        } else {
+                            counter.textContent = Math.floor(current).toLocaleString();
+                        }
+                        if (progress < 1) {
+                            requestAnimationFrame(update);
+                        } else {
+                            counter.textContent = isFloat ? target.toFixed(1) : target.toLocaleString();
+                        }
+                    }
+                    requestAnimationFrame(update);
+                });
+            }
+
+            // ─────────────────────────────────────
+            // ТУЛТИП СИСТЕМА
+            // ─────────────────────────────────────
+            const tooltip = document.getElementById('tooltip');
+            let tooltipTimeout;
+
+            function showTooltip(e, data) {
+                clearTimeout(tooltipTimeout);
+                let html = `<div class="tt-name">${data.name}</div>`;
+                html +=
+                    `<div class="tt-row"><span>Уровень:</span><span>${data.percent}%</span></div>`;
+                if (data.experience) html +=
+                    `<div class="tt-row"><span>Опыт:</span><span>${data.experience}</span></div>`;
+                if (data.projects) html +=
+                    `<div class="tt-row"><span>Проектов:</span><span>${data.projects}</span></div>`;
+                if (data.stack) html +=
+                    `<div class="tt-row"><span>Стек:</span><span>${data.stack}</span></div>`;
+                tooltip.innerHTML = html;
+                tooltip.classList.add('visible');
+
+                // Позиционирование
+                const rect = e.target.getBoundingClientRect();
+                let left = rect.right + 14;
+                let top = rect.top;
+                const tipWidth = 240;
+                if (left + tipWidth > window.innerWidth - 20) {
+                    left = rect.left - tipWidth - 14;
+                }
+                if (top + 140 > window.innerHeight) {
+                    top = window.innerHeight - 160;
+                }
+                if (top < 10) top = 10;
+                tooltip.style.left = left + 'px';
+                tooltip.style.top = top + 'px';
+            }
+
+            function hideTooltip() {
+                tooltipTimeout = setTimeout(() => {
+                    tooltip.classList.remove('visible');
+                }, 150);
+            }
+
+            // Навешиваем обработчики на круговые скиллы
+            document.addEventListener('mouseover', function(e) {
+                const circularSkill = e.target.closest('.circular-skill');
+                const barSkill = e.target.closest('.skill-bar-item');
+                const contribCell = e.target.closest('.contrib-cell');
+
+                if (circularSkill && circularSkill._tooltipData) {
+                    showTooltip(e, circularSkill._tooltipData);
+                    tooltip.addEventListener('mouseenter', () => clearTimeout(tooltipTimeout));
+                    tooltip.addEventListener('mouseleave', hideTooltip);
+                } else if (barSkill && barSkill._tooltipData) {
+                    showTooltip(e, barSkill._tooltipData);
+                    tooltip.addEventListener('mouseenter', () => clearTimeout(tooltipTimeout));
+                    tooltip.addEventListener('mouseleave', hideTooltip);
+                } else if (contribCell) {
+                    const level = contribCell.getAttribute('data-level');
+                    const data = {
+                        name: 'GitHub Contribution',
+                        percent: (level / 4 * 100).toFixed(0),
+                        experience: 'Уровень ' + level,
+                        projects: level === '0' ? 'Нет активности' : `${level} коммит(ов)`,
+                        stack: level >= 3 ? 'Высокая активность' : level >= 1 ?
+                            'Средняя активность' : 'Низкая активность',
+                    };
+                    showTooltip(e, data);
+                    tooltip.addEventListener('mouseenter', () => clearTimeout(tooltipTimeout));
+                    tooltip.addEventListener('mouseleave', hideTooltip);
+                } else {
+                    hideTooltip();
+                }
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                const circularSkill = e.target.closest('.circular-skill');
+                const barSkill = e.target.closest('.skill-bar-item');
+                const contribCell = e.target.closest('.contrib-cell');
+                if ((circularSkill && circularSkill._tooltipData) ||
+                    (barSkill && barSkill._tooltipData) || contribCell) {
+                    if (tooltip.classList.contains('visible')) {
+                        const rect = (circularSkill || barSkill || contribCell).getBoundingClientRect();
+                        let left = rect.right + 14;
+                        let top = rect.top;
+                        const tipWidth = 240;
+                        if (left + tipWidth > window.innerWidth - 20) {
+                            left = rect.left - tipWidth - 14;
+                        }
+                        if (top + 140 > window.innerHeight) top = window.innerHeight - 160;
+                        if (top < 10) top = 10;
+                        tooltip.style.left = left + 'px';
+                        tooltip.style.top = top + 'px';
+                    }
+                }
+            });
+
+            tooltip.addEventListener('mouseenter', () => clearTimeout(tooltipTimeout));
+            tooltip.addEventListener('mouseleave', hideTooltip);
+
+            // ─────────────────────────────────────
+            // ОБРАБОТЧИК ФОРМЫ
+            // ─────────────────────────────────────
+            const hireForm = document.getElementById('hireForm');
+            hireForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const btn = hireForm.querySelector('.neon-btn');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<span>✓</span> Заявка отправлена!';
+                btn.style.background = '#2ed573';
+                btn.style.boxShadow = '0 0 35px rgba(46,213,115,0.6)';
+                btn.style.pointerEvents = 'none';
+
+                // Сбор данных
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    budget: document.getElementById('budget').value,
+                    timeline: document.getElementById('timeline').value,
+                    message: document.getElementById('message').value,
+                };
+                console.log('📩 Hire Request:', formData);
+
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '';
+                    btn.style.boxShadow = '';
+                    btn.style.pointerEvents = '';
+                    hireForm.reset();
+                }, 3000);
+            });
+
+            // ─────────────────────────────────────
+            // ИНИЦИАЛИЗАЦИЯ: запускаем анимации для видимых элементов
+            // ─────────────────────────────────────
+            function initVisibleAnimations() {
+                const circularPanel = document.getElementById('circularPanel');
+                const barsPanel = document.getElementById('barsPanel');
+                const statsRow = document.querySelector('.stats-row');
+
+                const rectCirc = circularPanel.getBoundingClientRect();
+                const rectBars = barsPanel.getBoundingClientRect();
+                const rectStats = statsRow.getBoundingClientRect();
+
+                if (rectCirc.top < window.innerHeight && rectCirc.bottom > 0) {
+                    const circles = circularPanel.querySelectorAll('.circular-skill');
+                    circles.forEach((c, i) => setTimeout(() => c.classList.add('animated'), i * 100));
+                }
+                if (rectBars.top < window.innerHeight && rectBars.bottom > 0) {
+                    const fills = barsPanel.querySelectorAll('.skill-bar-fill');
+                    fills.forEach((f, i) => setTimeout(() => f.classList.add('animated-bar'), i * 80));
+                }
+                if (rectStats.top < window.innerHeight && rectStats.bottom > 0) {
+                    animateCounters(statsRow);
+                }
+            }
+
+            // Небольшая задержка для первоначального рендера
+            setTimeout(initVisibleAnimations, 400);
+
+            console.log('🟢 Data Nerd Dashboard initialized');
+            console.log('   Matrix grid: active');
+            console.log('   Glitch effect: active');
+            console.log('   Charts: ready');
+            console.log('   Tooltips: active');
+            console.log('   Observer: watching');
+            console.log('   Status: All systems operational');
+        })();
+    </script>
+</body>
+</html>
